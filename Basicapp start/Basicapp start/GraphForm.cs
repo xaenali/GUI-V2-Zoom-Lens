@@ -21,23 +21,24 @@ namespace Basicapp_start
             if (BeamExpanderControl.Maxtrackischecked == true)
             {
 
-                BeamExpanderControl.MaxF1 = BeamExpanderControl.F1List[BeamExpanderControl.MaxtrackList.IndexOf(BeamExpanderControl.MaxtrackList.Max())];
+                BeamExpanderControl.MaxF1 = BeamExpanderControl.CopyF1List[BeamExpanderControl.CopyMaxtrackList.IndexOf(BeamExpanderControl.CopyMaxtrackList.Max())];
 
-                BeamExpanderControl.MaxF2 = BeamExpanderControl.F2List[BeamExpanderControl.MaxtrackList.IndexOf(BeamExpanderControl.MaxtrackList.Max())];
+                BeamExpanderControl.MaxF2 = BeamExpanderControl.CopyF2List[BeamExpanderControl.CopyMaxtrackList.IndexOf(BeamExpanderControl.CopyMaxtrackList.Max())];
 
-                BeamExpanderControl.MaxF3 = BeamExpanderControl.F3List[BeamExpanderControl.MaxtrackList.IndexOf(BeamExpanderControl.MaxtrackList.Max())];
+                BeamExpanderControl.MaxF3 = BeamExpanderControl.CopyF3List[BeamExpanderControl.CopyMaxtrackList.IndexOf(BeamExpanderControl.CopyMaxtrackList.Max())];
 
 
-                for (double i = BeamExpanderControl.InputMin; i < BeamExpanderControl.InputMax; i += 0.1)
+                for (double i = BeamExpanderControl.CopyInputMin; i < BeamExpanderControl.InputMax; i += 0.1)
                 {
-                    BeamExpanderControl.InputMin = BeamExpanderControl.InputMin + 0.1;
-
 
                     //Calculate d1 and d2 for the Input Magnification
 
-                    BeamExpanderControl.Maxd1 = Math.Round((double)BeamExpanderControl.MaxF1 + BeamExpanderControl.MaxF2 + ((BeamExpanderControl.MaxF1 * BeamExpanderControl.MaxF2) / (BeamExpanderControl.InputMin * BeamExpanderControl.MaxF3)), 4);
+                    BeamExpanderControl.Maxd1 = Math.Round((double)BeamExpanderControl.MaxF1 + BeamExpanderControl.MaxF2 + ((BeamExpanderControl.MaxF1 * BeamExpanderControl.MaxF2) / (BeamExpanderControl.CopyInputMin * BeamExpanderControl.MaxF3)), 4);
 
-                    BeamExpanderControl.Maxd2 = Math.Round((double)BeamExpanderControl.MaxF2 + BeamExpanderControl.MaxF3 + ((BeamExpanderControl.MaxF2 * BeamExpanderControl.MaxF3 * BeamExpanderControl.InputMin) / (BeamExpanderControl.MaxF1)), 4);
+                    BeamExpanderControl.Maxd2 = Math.Round((double)BeamExpanderControl.MaxF2 + BeamExpanderControl.MaxF3 + ((BeamExpanderControl.MaxF2 * BeamExpanderControl.MaxF3 * BeamExpanderControl.CopyInputMin) / (BeamExpanderControl.MaxF1)), 4);
+
+                    BeamExpanderControl.CopyInputMin = BeamExpanderControl.CopyInputMin + 0.1;
+
 
                     if ((BeamExpanderControl.Maxd1 >= -0.012) && (BeamExpanderControl.Maxd1 < 0))
                     {
@@ -50,11 +51,11 @@ namespace Basicapp_start
                         BeamExpanderControl.Maxd2 = 0;
                     }
 
-                    DistanceChart1.Series["D0"].Points.AddXY(0, BeamExpanderControl.InputMin);
+                    DistanceChart1.Series["D0"].Points.AddXY(0, BeamExpanderControl.CopyInputMin);
 
-                    DistanceChart1.Series["D1"].Points.AddXY(BeamExpanderControl.Maxd1, BeamExpanderControl.InputMin);
+                    DistanceChart1.Series["D1"].Points.AddXY(BeamExpanderControl.Maxd1, BeamExpanderControl.CopyInputMin);
 
-                    DistanceChart1.Series["D2"].Points.AddXY(BeamExpanderControl.Maxd1 + BeamExpanderControl.Maxd2, BeamExpanderControl.InputMin);
+                    DistanceChart1.Series["D2"].Points.AddXY(BeamExpanderControl.Maxd1 + BeamExpanderControl.Maxd2, BeamExpanderControl.CopyInputMin);
 
                 }
 
@@ -63,22 +64,24 @@ namespace Basicapp_start
             else
                     if (BeamExpanderControl.Mintrackischecked == true)
             {
-                BeamExpanderControl.MinF1 = BeamExpanderControl.F1List[BeamExpanderControl.MaxtrackList.IndexOf(BeamExpanderControl.MaxtrackList.Min())];
+                BeamExpanderControl.MinF1 = BeamExpanderControl.CopyF1List[BeamExpanderControl.CopyMaxtrackList.IndexOf(BeamExpanderControl.CopyMaxtrackList.Min())];
 
-                BeamExpanderControl.MinF2 = BeamExpanderControl.F2List[BeamExpanderControl.MaxtrackList.IndexOf(BeamExpanderControl.MaxtrackList.Min())];
+                BeamExpanderControl.MinF2 = BeamExpanderControl.CopyF2List[BeamExpanderControl.CopyMaxtrackList.IndexOf(BeamExpanderControl.CopyMaxtrackList.Min())];
 
-                BeamExpanderControl.MinF3 = BeamExpanderControl.F3List[BeamExpanderControl.MaxtrackList.IndexOf(BeamExpanderControl.MaxtrackList.Min())];
+                BeamExpanderControl.MinF3 = BeamExpanderControl.CopyF3List[BeamExpanderControl.CopyMaxtrackList.IndexOf(BeamExpanderControl.CopyMaxtrackList.Min())];
 
-                for (double i = BeamExpanderControl.InputMin; i < BeamExpanderControl.InputMax; i += 0.1)
+                for (double i = BeamExpanderControl.CopyInputMin; i < BeamExpanderControl.InputMax; i += 0.1)
                 {
-                    BeamExpanderControl.InputMin = BeamExpanderControl.InputMin + 0.1;
 
                     //Calculate d1 and d2 for the Input Magnification
 
-                    BeamExpanderControl.Mind1 = Math.Round((double)BeamExpanderControl.MinF1 + BeamExpanderControl.MinF2 + ((BeamExpanderControl.MinF1 * BeamExpanderControl.MinF2) / (BeamExpanderControl.InputMin * BeamExpanderControl.MinF3)), 4);
+                    BeamExpanderControl.Mind1 = Math.Round((double)BeamExpanderControl.MinF1 + BeamExpanderControl.MinF2 + ((BeamExpanderControl.MinF1 * BeamExpanderControl.MinF2) / (BeamExpanderControl.CopyInputMin * BeamExpanderControl.MinF3)), 4);
 
-                    BeamExpanderControl.Mind2 = Math.Round((double)BeamExpanderControl.MinF2 + BeamExpanderControl.MinF3 + ((BeamExpanderControl.MinF2 * BeamExpanderControl.MinF3 * BeamExpanderControl.InputMin) / (BeamExpanderControl.MinF1)), 4);
+                    BeamExpanderControl.Mind2 = Math.Round((double)BeamExpanderControl.MinF2 + BeamExpanderControl.MinF3 + ((BeamExpanderControl.MinF2 * BeamExpanderControl.MinF3 * BeamExpanderControl.CopyInputMin) / (BeamExpanderControl.MinF1)), 4);
 
+                    BeamExpanderControl.CopyInputMin = BeamExpanderControl.CopyInputMin + 0.1;
+
+                    
                     if ((BeamExpanderControl.Mind1 >= -0.012) && (BeamExpanderControl.Mind1 < 0))
                     {
                         BeamExpanderControl.Mind1 = 0;
@@ -90,15 +93,16 @@ namespace Basicapp_start
                         BeamExpanderControl.Mind2 = 0;
                     }
 
-                    DistanceChart1.Series["D0"].Points.AddXY(0, BeamExpanderControl.InputMin);
+                    DistanceChart1.Series["D0"].Points.AddXY(0, BeamExpanderControl.CopyInputMin);
 
-                    DistanceChart1.Series["D1"].Points.AddXY(BeamExpanderControl.Mind1, BeamExpanderControl.InputMin);
+                    DistanceChart1.Series["D1"].Points.AddXY(BeamExpanderControl.Mind1, BeamExpanderControl.CopyInputMin);
 
-                    DistanceChart1.Series["D2"].Points.AddXY(BeamExpanderControl.Mind1 + BeamExpanderControl.Mind2, BeamExpanderControl.InputMin);
+                    DistanceChart1.Series["D2"].Points.AddXY(BeamExpanderControl.Mind1 + BeamExpanderControl.Mind2, BeamExpanderControl.CopyInputMin);
 
                 }
 
             }
+
         }
 
         private void DistanceChart1_Click(object sender, EventArgs e)

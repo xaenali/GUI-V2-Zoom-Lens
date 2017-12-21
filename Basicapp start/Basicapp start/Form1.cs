@@ -54,6 +54,7 @@ namespace Basicapp_start
         private void Form1_Load(object sender, EventArgs e)
         {
 
+
         }
 
         private void graphsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -105,5 +106,6 @@ namespace Basicapp_start
         {
             this.Close();
         }
+
     }
 }

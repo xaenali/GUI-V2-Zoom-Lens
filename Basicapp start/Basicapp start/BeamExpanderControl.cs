@@ -24,7 +24,7 @@ namespace Basicapp_start
 {
     public partial class BeamExpanderControl : UserControl
     {
-        public static double TM, Input, InputMax, InputMin, InputbeamDia, EPDConstrainF1, EPDConstrainF3, Mind1, Mind2, MinF1, MinF2, MinF3, Maxd1, Maxd2, MaxF1, MaxF2, MaxF3, Maxa1, Maxa2, Maxb1, Maxb2, MaxMx, MaxMy, MaxMxratioMy, Mina1, Mina2, Minb1, Minb2, MinMx, MinMy, MinMxratioMy;
+        public static double Distance1Add, CopyInputMin, TM, Input, InputMax, InputMin, InputbeamDia, EPDConstrainF1, EPDConstrainF3, Mind1, Mind2, MinF1, MinF2, MinF3, Maxd1, Maxd2, MaxF1, MaxF2, MaxF3, Maxa1, Maxa2, Maxb1, Maxb2, MaxMx, MaxMy, MaxMxratioMy, Mina1, Mina2, Minb1, Minb2, MinMx, MinMy, MinMxratioMy, md1,d2;
         public static string VendorL1, VendorL2, VendorL3, LP1, LP2, LP3; // Vendors and Lenspart variable to be used in MinTrack, Maxtrack and in Standalone application as sorted out for Maxtrack or Min track length
         public static List<double> Temp1 = new List<double>(); // List for Distance 1 that will be used to add thickness in Zemax LDE
         public static List<double> Temp2 = new List<double>(); // List for Distance 2 that will be used to add thickness in Zemax LDE
@@ -32,9 +32,14 @@ namespace Basicapp_start
         public static List<string> LPTemp2 = new List<string>(); // List for lens part 2
         public static List<string> LPTemp3 = new List<string>(); // List for lens part 3
         public static IList<double> MaxtrackList = new List<double>();
+        public static IList<double> CopyMaxtrackList = new List<double>();
         public static IList<double> F1List = new List<double>();
         public static IList<double> F2List = new List<double>();
         public static IList<double> F3List = new List<double>();
+        public static IList<double> CopyF1List = new List<double>();
+        public static IList<double> CopyF2List = new List<double>();
+        public static IList<double> CopyF3List = new List<double>();
+        public static IList<double> CopyInpList = new List<double>();
         public static double[] Mx = new double[1000000];
         public static double[] My = new double[1000000];
         public static List<double> MxList = new List<double>();
@@ -46,6 +51,7 @@ namespace Basicapp_start
         public static double[] MxratioMy = new double[1000000];
         public static IList<double> templist = new List<double>();
         public static double[] Maxtrack = new double[1000000];
+        public static List<double> d1 = new List<double>();
         public static List<double> focallength1 = new List<double>(); // Initialize array for focal length 1------ used with excel
         public static List<double> focallength2 = new List<double>(); // Initialize array for focal length 2------ used with excel
         public static List<double> focallength3 = new List<double>(); // Initialize array for focal length 3------ used with excel
@@ -61,12 +67,17 @@ namespace Basicapp_start
         public static List<string> LensList1 = new List<string>(); // Initialize Lens part number for focallength 1
         public static List<string> LensList2 = new List<string>(); // Initialize Lens part number for focallength 2
         public static List<string> LensList3 = new List<string>(); // Initialize Lens part number for focallength 3
+        public static List<string> CopyLensList1 = new List<string>(); // Initialize Lens part number for focallength 1
+        public static List<string> CopyLensList2 = new List<string>(); // Initialize Lens part number for focallength 2
+        public static List<string> CopyLensList3 = new List<string>(); // Initialize Lens part number for focallength 3
+
         public static List<string> VL1 = new List<string>(); // Initialize vender for focallength 1------ used with excel
         public static List<string> VL2 = new List<string>(); // Initialize vendor for focallength 2------ used with excel
         public static List<string> VL3 = new List<string>(); // Initialize vendor for focallength 3------ used with excel
         public static List<string> vendorList1 = new List<string>(); // Initialize vendor for focallength 1
         public static List<string> vendorList2 = new List<string>(); // Initialize vendor for focallength 2
         public static List<string> vendorList3 = new List<string>(); // Initialize vendor for focallength 3
+
         public static bool Maxtrackischecked;
         public static bool Mintrackischecked;
 
@@ -80,7 +91,7 @@ namespace Basicapp_start
 
             Maxtracktextbox.ReadOnly = true;
 
-            Mintracktaxbox.ReadOnly = true;
+            Mintracktextbox.ReadOnly = true;
 
             Distance1Testbox.ReadOnly = true;
 
@@ -90,7 +101,7 @@ namespace Basicapp_start
 
         private void Magmaxinput_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
             {
                 e.Handled = true;
 
@@ -106,7 +117,7 @@ namespace Basicapp_start
 
         private void MinMaginput_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
             {
                 e.Handled = true;
 
@@ -124,7 +135,7 @@ namespace Basicapp_start
 
         private void BeamDiaInput_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
             {
                 e.Handled = true;
 
@@ -140,163 +151,206 @@ namespace Basicapp_start
 
         private void buttonMaginputs_Click(object sender, EventArgs e)
         {
-            Button Inputmag = (Button)sender;
-
-            //Double.TryParse(Magmaxinput.Text, out InputMax);
-
-            //MessageBox.Show("Please enter numeric value");
-
-            //if(Magmaxinput.Text == null && MinMaginput.Text == null && BeamDiaInput.Text == null)
+            //if (!DistancebackgroundWorker.IsBusy)
             //{
-                InputMax = double.Parse(Magmaxinput.Text);
+            //    DistancebackgroundWorker.RunWorkerAsync();
+            //}
 
-                InputMin = double.Parse(MinMaginput.Text);
+            //else
+            //{
+            //    Messagelabel.Text = ("Busy processign please wait");
 
-                InputbeamDia = double.Parse(BeamDiaInput.Text);
+            //}
 
-                string InMax = InputMax.ToString();
+            InputMax = double.Parse(Magmaxinput.Text);
 
-                string InMin = InputMin.ToString();
+            InputMin = double.Parse(MinMaginput.Text);
 
-                string InbeamDia = InputbeamDia.ToString();
+            InputbeamDia = double.Parse(BeamDiaInput.Text);
 
-                EPDConstrainF1 = (double)1.5 * InputbeamDia;
+            EPDConstrainF1 = (double)1.5 * InputbeamDia;
 
-                EPDConstrainF3 = (double)(1 / InputMin) * 1.5 * InputbeamDia;
+            EPDConstrainF3 = (double)(1 / InputMin) * 1.5 * InputbeamDia;
 
-                perm(focallength1, focallength2, focallength3, EPD1, EPD2, EPD3);
+            CopyInputMin = InputMin;
 
-                if (!MaxtrackList.Any())
-                {
-                    Magmaxinput.Text = " ";
-                    MinMaginput.Text = " ";
-                }
+            perm(focallength1, focallength2, focallength3, EPD1, EPD2, EPD3);
 
-                else
+
+
+            if (!MaxtrackList.Any())
+            {
+                //Empty Magnification text box
+
+                Magmaxinput.Text = " ";
+                MinMaginput.Text = " ";
+            }
+
+            else
 
                 if (InputMax > InputMin)
                 {
-                    Maxtracktextbox.Text = MaxtrackList.Max().ToString();
+                    for (int c = 0; c < F1List.Count; c++)
+                    {
 
-                    Mintracktaxbox.Text = MaxtrackList.Min().ToString();
+                        for (double x = InputMin; x < InputMax; x += 0.1)
+                        {
+                            Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (InputMin * F3List[c])), 4);
+
+                            d1.Add(Distance1Add);
+
+
+                        }
+
+                        bool Distance1 = d1.All(elements => elements >= 10);
+
+                        if (Distance1 == true)
+                        {
+                            CopyMaxtrackList.Add(MaxtrackList[c]);
+
+                            CopyF1List.Add(F1List[c]);
+
+                            CopyF2List.Add(F2List[c]);
+
+                            CopyF3List.Add(F3List[c]);
+
+                            CopyLensList1.Add(LensList1[c]);
+
+                            CopyLensList2.Add(LensList2[c]);
+
+                            CopyLensList3.Add(LensList3[c]);
+
+
+                        }
+
+
+
+                    }
+
+                    for (int y = 0; y < CopyMaxtrackList.Count; y++)
+                    {
+                        Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
+
+                    }
+
+                    Maxtracktextbox.Text = CopyMaxtrackList.Max().ToString();
+
+                    Mintracktextbox.Text = CopyMaxtrackList.Min().ToString();
+
                 }
 
                 else
 
                     MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
 
-                return;
 
-            //}
 
-            //else
-            //{
-            //    MessageBox.Show("Please Enter Magnification and Beam dia");
-            //}
         }
 
         public static double perm(List<double> F1, List<double> F2, List<double> F3, List<double> EP1, List<double> EP2, List<double> EP3)
         {
             int i, j, k;
 
-            for (i = 0; i < F1.Count; i++)
-            {
-
-                for (j = 0; j < F2.Count; j++)
+                for (i = 0; i < F1.Count; i++)
                 {
-                    for (k = 0; k < F3.Count; k++)
+
+                    for (j = 0; j < F2.Count; j++)
                     {
-
-                        a1[k] = Math.Round((double)F1[i] + F2[j], 4);
-
-                        MxratioMy[k] = Math.Round((double)F1[i] / F3[k], 4);
-
-                        a2[k] = Math.Round((double)F2[j] + F3[k], 4);
-
-                        b1[k] = Math.Round((double)(F1[i] * F2[j]) / F3[k], 4);
-
-                        b2[k] = Math.Round((double)(F2[j] * F3[k]) / F1[i], 4);
-
-                        Mx[k] = Math.Round((double)-a2[k] / b2[k], 4);
-
-                        My[k] = Math.Round((double)-b1[k] / a1[k], 4);
-
-
-
-                        Maxtrack[k] = Math.Round((double)F1[i] + 2 * F2[j] + F3[k] + (F2[j] * (((F3[k] * MxratioMy[k]) / F1[i]) + F1[i] / (F3[k] * MxratioMy[k]))), 4);
-
-                        if (EPD1[i] >= EPDConstrainF1)
+                        for (k = 0; k < F3.Count; k++)
                         {
-                            if (EPD3[k] >= EPDConstrainF3 && EPD2[j] != EPD3[k])
+
+                            a1[k] = Math.Round((double)F1[i] + F2[j], 4);
+
+                            MxratioMy[k] = Math.Round((double)F1[i] / F3[k], 4);
+
+                            a2[k] = Math.Round((double)F2[j] + F3[k], 4);
+
+                            b1[k] = Math.Round((double)(F1[i] * F2[j]) / F3[k], 4);
+
+                            b2[k] = Math.Round((double)(F2[j] * F3[k]) / F1[i], 4);
+
+                            Mx[k] = Math.Round((double)-a2[k] / b2[k], 4);
+
+                            My[k] = Math.Round((double)-b1[k] / a1[k], 4);
+
+                            Maxtrack[k] = Math.Round((double)F1[i] + 2 * F2[j] + F3[k] + (F2[j] * (((F3[k] * MxratioMy[k]) / F1[i]) + F1[i] / (F3[k] * MxratioMy[k]))), 4);
+
+
+                            if (EPD1[i] >= EPDConstrainF1)
                             {
-                                if ((Mx[k] > MxratioMy[k]) && (MxratioMy[k] > My[k]) && (InputMax <= Mx[k]) && (InputMin >= My[k]) && (InputMax > InputMin) && (InputMin < InputMax))
+                                if (EPD3[k] >= EPDConstrainF3 && EPD2[j] != EPD3[k])
                                 {
-                                    F1List.Add(F1[i]);
+                                    if ((Mx[k] > MxratioMy[k]) && (MxratioMy[k] > My[k]) && (InputMax <= Mx[k]) && (InputMin >= My[k]) && (InputMax > InputMin) && (InputMin < InputMax) )
+                                    {
 
-                                    F2List.Add(F2[j]);
+                                        F1List.Add(F1[i]);
 
-                                    F3List.Add(F3[k]);
+                                        F2List.Add(F2[j]);
 
-                                    EPD1List.Add(EPD1[i]);
+                                        F3List.Add(F3[k]);
 
-                                    EPD2List.Add(EPD2[j]);
+                                        EPD1List.Add(EPD1[i]);
 
-                                    EPD3List.Add(EPD3[k]);
+                                        EPD2List.Add(EPD2[j]);
 
-                                    LensList1.Add(LensPartList1[i]);
+                                        EPD3List.Add(EPD3[k]);
 
-                                    LensList2.Add(LensPartList2[j]);
+                                        LensList1.Add(LensPartList1[i]);
 
-                                    LensList3.Add(LensPartList3[k]);
+                                        LensList2.Add(LensPartList2[j]);
 
-                                    vendorList1.Add(VL1[i]);
+                                        LensList3.Add(LensPartList3[k]);
 
-                                    vendorList2.Add(VL2[j]);
+                                        vendorList1.Add(VL1[i]);
 
-                                    vendorList3.Add(VL3[k]);
+                                        vendorList2.Add(VL2[j]);
 
-                                    MaxtrackList.Add(Maxtrack[k]);
+                                        vendorList3.Add(VL3[k]);
 
-                                    MxList.Add(Mx[k]);
+                                        MaxtrackList.Add(Maxtrack[k]);
 
-                                    MyList.Add(My[k]);
+                                        MxList.Add(Mx[k]);
+
+                                        MyList.Add(My[k]);
+
+                                       
+
+                                    }
 
                                 }
-
                             }
-                        }
 
+                            else
 
-                        else
-
-                            if (EPD1[i] < EPDConstrainF1)
-                        {
-                            if (EPD3[k] < EPDConstrainF3 || EPD2[j] == EPD3[k])
-                            {
-                                if ((MxratioMy[k] > Mx[k]) || (My[k] > MxratioMy[k]) || (InputMax > Mx[k]) || (InputMin < My[k]) || (InputMax < InputMin))
+                                if (EPD1[i] < EPDConstrainF1)
                                 {
+                                    if (EPD3[k] < EPDConstrainF3 || EPD2[j] == EPD3[k])
+                                    {
+                                        if ((MxratioMy[k] > Mx[k]) || (My[k] > MxratioMy[k]) || (InputMax > Mx[k]) || (InputMin < My[k]) || (InputMax < InputMin))
+                                        {
 
-                                    // Do nothing here just ignore the values
+                                            // Do nothing here just ignore the values
 
+                                        }
+
+                                    }
                                 }
 
-                            }
                         }
 
                     }
-
                 }
-            }
 
             //check for emptiness of a List for no suitable combination of focal length
+
 
             if (!MaxtrackList.Any())
             {
                 MessageBox.Show("There is no suitable focal length in database for this configuration");
 
             }
-
-            return 0;
+           
+                return 0;
 
         }
 
@@ -321,7 +375,7 @@ namespace Basicapp_start
             //Create COM Objects. Create a COM object for everything that is referenced
             Excel.Application xlApp = new Excel.Application();
 
-            Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"V:\A340\2017\DIPLOM\ALI\Programme\C# programs\Basicapp start\Basicapp start\Lens Database.xlsx");
+            Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"C:\Users\Ali\Source\Repos\GUI-V2-Zoom-Lens\Basicapp start\Basicapp start\Lens Database.xlsx");
 
             Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
 
@@ -490,10 +544,10 @@ namespace Basicapp_start
         {
             StringBuilder MessageText = new StringBuilder();
 
-            if (MaxtrackRadioButton.Checked == true && Maxtracktextbox == null)
+            if (MaxtrackRadioButton.Checked == true)
             {
 
-                MessageText.AppendLine(string.Format("F1 = {0}, F2 = {1}, F3 = {2} ", F1List[MaxtrackList.IndexOf(MaxtrackList.Max())], F2List[MaxtrackList.IndexOf(MaxtrackList.Max())], F3List[MaxtrackList.IndexOf(MaxtrackList.Max())]));
+                MessageText.AppendLine(string.Format("F1 = {0}, F2 = {1}, F3 = {2} ", CopyF1List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())], CopyF2List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())], CopyF3List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())]));
 
                 MessageBox.Show(MessageText.ToString());
 
@@ -501,9 +555,9 @@ namespace Basicapp_start
             }
 
             else
-                if (MinimumTrackButton.Checked == true && Maxtracktextbox == null)
+                if (MinimumTrackButton.Checked == true )
             {
-                MessageText.AppendLine(string.Format("F1 = {0}, F2 = {1}, F3 = {2} ", F1List[MaxtrackList.IndexOf(MaxtrackList.Min())], F2List[MaxtrackList.IndexOf(MaxtrackList.Min())], F3List[MaxtrackList.IndexOf(MaxtrackList.Min())]));
+                MessageText.AppendLine(string.Format("F1 = {0}, F2 = {1}, F3 = {2} ", CopyF1List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())], CopyF2List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())], CopyF3List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())]));
 
                 MessageBox.Show(MessageText.ToString());
 
@@ -529,11 +583,11 @@ namespace Basicapp_start
                 {
                     // Take the values for focallengths, Lensparts and vendors as obtained at Maximum track length
 
-                    MaxF1 = F1List[MaxtrackList.IndexOf(MaxtrackList.Max())];
+                    MaxF1 = CopyF1List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
-                    MaxF2 = F2List[MaxtrackList.IndexOf(MaxtrackList.Max())];
+                    MaxF2 = CopyF2List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
-                    MaxF3 = F3List[MaxtrackList.IndexOf(MaxtrackList.Max())];
+                    MaxF3 = CopyF3List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
                     LP1 = LensList1[MaxtrackList.IndexOf(MaxtrackList.Max())];
 
@@ -549,19 +603,19 @@ namespace Basicapp_start
 
                     // Calculate here again all values needed for distance calculation
 
-                    Maxa1 = Math.Round((double)MaxF1 + MaxF2, 4);
+                    //Maxa1 = Math.Round((double)MaxF1 + MaxF2, 4);
 
-                    MaxMxratioMy = Math.Round((double)MaxF1 / MaxF3, 4);
+                    //MaxMxratioMy = Math.Round((double)MaxF1 / MaxF3, 4);
 
-                    Maxa2 = Math.Round((double)MaxF2 + MaxF3, 4);
+                    //Maxa2 = Math.Round((double)MaxF2 + MaxF3, 4);
 
-                    Maxb1 = Math.Round((double)(MaxF1 * MaxF2 / MaxF3), 4);
+                    //Maxb1 = Math.Round((double)(MaxF1 * MaxF2 / MaxF3), 4);
 
-                    Maxb2 = Math.Round((double)(MaxF2 * MaxF3) / MaxF1, 4);
+                    //Maxb2 = Math.Round((double)(MaxF2 * MaxF3) / MaxF1, 4);
 
-                    MaxMx = Math.Round((double)-Maxa2 / Maxb2, 4);
+                    //MaxMx = Math.Round((double)-Maxa2 / Maxb2, 4);
 
-                    MaxMy = Math.Round((double)-Maxb1 / Maxa1, 4);
+                    //MaxMy = Math.Round((double)-Maxb1 / Maxa1, 4);
 
 
                     if ((Input <= InputMax) && (Input >= InputMin))
@@ -622,11 +676,11 @@ namespace Basicapp_start
                 else
                     if (MinimumTrackButton.Checked == true)
                 {
-                    MinF1 = F1List[MaxtrackList.IndexOf(MaxtrackList.Min())];
+                    MinF1 = CopyF1List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
-                    MinF2 = F2List[MaxtrackList.IndexOf(MaxtrackList.Min())];
+                    MinF2 = CopyF2List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
-                    MinF3 = F3List[MaxtrackList.IndexOf(MaxtrackList.Min())];
+                    MinF3 = CopyF3List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
                     LP1 = LensList1[MaxtrackList.IndexOf(MaxtrackList.Min())];
 
@@ -643,19 +697,19 @@ namespace Basicapp_start
 
                     // Calculate here again all values needed for distance calculation
 
-                    Mina1 = Math.Round((double)MinF1 + MinF2, 4);
+                    //Mina1 = Math.Round((double)MinF1 + MinF2, 4);
 
-                    MinMxratioMy = Math.Round((double)MinF1 / MinF3, 4);
+                    //MinMxratioMy = Math.Round((double)MinF1 / MinF3, 4);
 
-                    Mina2 = Math.Round((double)MinF2 + MinF3, 4);
+                    //Mina2 = Math.Round((double)MinF2 + MinF3, 4);
 
-                    Minb1 = Math.Round((double)(MinF1 * MinF2 / MinF3), 4);
+                    //Minb1 = Math.Round((double)(MinF1 * MinF2 / MinF3), 4);
 
-                    Minb2 = Math.Round((double)(MinF2 * MinF3) / MinF1, 4);
+                    //Minb2 = Math.Round((double)(MinF2 * MinF3) / MinF1, 4);
 
-                    MinMx = Math.Round((double)-Mina2 / Minb2, 4);
+                    //MinMx = Math.Round((double)-Mina2 / Minb2, 4);
 
-                    MinMy = Math.Round((double)-Minb1 / Mina1, 4);
+                    //MinMy = Math.Round((double)-Minb1 / Mina1, 4);
 
 
                     if ((Input <= InputMax) && (Input >= InputMin))
@@ -735,20 +789,25 @@ namespace Basicapp_start
 
             Mintrackischecked = MinimumTrackButton.Checked;
 
-            //if (Graphs == null)
-            //{
-            Graphs = new ZoomCurvesForm();
+               
+            if (Graphs == null)
+            {
+                    Graphs = new ZoomCurvesForm();
+                    
 
-            //Graphs.MdiParent = this;
 
+                Graphs.Show();
+
+           
             Graphs.FormClosed += new FormClosedEventHandler(Graphs_FormClosed);
 
-            Graphs.Show();
 
-            //}
+           }
 
-            //else
-            //    Graphs.Activate();
+            else
+              Graphs.Activate();
+           
+
 
         }
 
@@ -762,18 +821,18 @@ namespace Basicapp_start
     {
         StringBuilder MessageText = new StringBuilder();
 
-        if (MaxtrackRadioButton.Checked == true && Maxtracktextbox == null)
+        if (MaxtrackRadioButton.Checked == true)
         {
-            MessageText.AppendLine(string.Format("The Lens Part for F1 = {0}, F2 = {1} and F3 = {2} \n", LensList1[MaxtrackList.IndexOf(MaxtrackList.Max())], LensList2[MaxtrackList.IndexOf(MaxtrackList.Max())], LensList3[MaxtrackList.IndexOf(MaxtrackList.Max())]));
+            MessageText.AppendLine(string.Format("The Lens Part for F1 = {0}, F2 = {1} and F3 = {2} \n", CopyLensList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())], CopyLensList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())], CopyLensList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())]));
 
             MessageBox.Show(MessageText.ToString());
 
         }
 
         else
-            if (MinimumTrackButton.Checked == true && Maxtracktextbox == null)
+            if (MinimumTrackButton.Checked == true)
         {
-            MessageText.AppendLine(string.Format("The Lens Part for F1 = {0}, F2 = {1} and F3 = {2} \n", LensList1[MaxtrackList.IndexOf(MaxtrackList.Min())], LensList2[MaxtrackList.IndexOf(MaxtrackList.Min())], LensList3[MaxtrackList.IndexOf(MaxtrackList.Min())]));
+            MessageText.AppendLine(string.Format("The Lens Part for F1 = {0}, F2 = {1} and F3 = {2} \n", CopyLensList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())], CopyLensList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())], CopyLensList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())]));
 
             MessageBox.Show(MessageText.ToString());
 
@@ -1326,6 +1385,8 @@ namespace Basicapp_start
 
             Operand_REAYop3_CONF1.GetCellAt(7).DoubleValue = 1;
 
+            Operand_REAYop3_CONF1.Weight = 1;
+
             IMFERow Operand_RANGop4_CONF1 = TheMFE.InsertNewOperandAt(4);
 
             Operand_RANGop4_CONF1.ChangeType(MeritOperandType.RANG);
@@ -1336,67 +1397,67 @@ namespace Basicapp_start
 
             Operand_RANGop4_CONF1.Target = 0;
 
-            Operand_RANGop4_CONF1.Weight = 10;
+            Operand_RANGop4_CONF1.Weight = 0;
 
             Operand_RANGop4_CONF1.GetCellAt(7).DoubleValue = 1;
 
-            IMFERow Operand_EFLXop5_CONF1 = TheMFE.InsertNewOperandAt(5); // EFLX for operand 5
+            //IMFERow Operand_EFLXop5_CONF1 = TheMFE.InsertNewOperandAt(5); // EFLX for operand 5
 
-            Operand_EFLXop5_CONF1.ChangeType(MeritOperandType.EFLX);
+            //Operand_EFLXop5_CONF1.ChangeType(MeritOperandType.EFLX);
 
-            Operand_EFLXop5_CONF1.GetCellAt(2).IntegerValue = 2;
+            //Operand_EFLXop5_CONF1.GetCellAt(2).IntegerValue = 2;
 
-            Operand_EFLXop5_CONF1.GetCellAt(3).IntegerValue = 3;
+            //Operand_EFLXop5_CONF1.GetCellAt(3).IntegerValue = 3;
 
-            Operand_EFLXop5_CONF1.Target = MinF1;//Operand_EFLXop5_CONF1.GetCellAt(12).DoubleValue;
+            //Operand_EFLXop5_CONF1.Target = MinF1;//Operand_EFLXop5_CONF1.GetCellAt(12).DoubleValue;
 
-            Operand_EFLXop5_CONF1.Weight = 1;
+            //Operand_EFLXop5_CONF1.Weight = 1;
 
-            IMFERow Operand_EFLXop6_CONF1 = TheMFE.InsertNewOperandAt(6);
+            //IMFERow Operand_EFLXop6_CONF1 = TheMFE.InsertNewOperandAt(6);
 
-            Operand_EFLXop6_CONF1.ChangeType(MeritOperandType.EFLX);
+            //Operand_EFLXop6_CONF1.ChangeType(MeritOperandType.EFLX);
 
-            Operand_EFLXop6_CONF1.GetCellAt(2).IntegerValue = 4;
+            //Operand_EFLXop6_CONF1.GetCellAt(2).IntegerValue = 4;
 
-            Operand_EFLXop6_CONF1.GetCellAt(3).IntegerValue = 5;
+            //Operand_EFLXop6_CONF1.GetCellAt(3).IntegerValue = 5;
 
-            Operand_EFLXop6_CONF1.Target = MinF2; //Operand_EFLXop6_CONF1.GetCellAt(12).DoubleValue;
+            //Operand_EFLXop6_CONF1.Target = MinF2; //Operand_EFLXop6_CONF1.GetCellAt(12).DoubleValue;
 
-            Operand_EFLXop6_CONF1.Weight = 1;
+            //Operand_EFLXop6_CONF1.Weight = 1;
 
-            IMFERow Operand_EFLXop7_CONF1 = TheMFE.InsertNewOperandAt(7);
+            //IMFERow Operand_EFLXop7_CONF1 = TheMFE.InsertNewOperandAt(7);
 
-            Operand_EFLXop7_CONF1.ChangeType(MeritOperandType.EFLX);
+            //Operand_EFLXop7_CONF1.ChangeType(MeritOperandType.EFLX);
 
-            Operand_EFLXop7_CONF1.GetCellAt(2).IntegerValue = 6;
+            //Operand_EFLXop7_CONF1.GetCellAt(2).IntegerValue = 6;
 
-            Operand_EFLXop7_CONF1.GetCellAt(3).IntegerValue = 7;
+            //Operand_EFLXop7_CONF1.GetCellAt(3).IntegerValue = 7;
 
-            Operand_EFLXop7_CONF1.Target = MinF3;//Operand_EFLXop7_CONF1.GetCellAt(12).DoubleValue;
+            //Operand_EFLXop7_CONF1.Target = MinF3;//Operand_EFLXop7_CONF1.GetCellAt(12).DoubleValue;
 
-            Operand_EFLXop7_CONF1.Weight = 1;
+            //Operand_EFLXop7_CONF1.Weight = 1;
 
-            IMFERow Operand_CTGTop8_CONF1 = TheMFE.InsertNewOperandAt(8);
+            //IMFERow Operand_CTGTop8_CONF1 = TheMFE.InsertNewOperandAt(8);
 
-            Operand_CTGTop8_CONF1.ChangeType(MeritOperandType.CTGT);
+            //Operand_CTGTop8_CONF1.ChangeType(MeritOperandType.CTGT);
 
-            Operand_CTGTop8_CONF1.GetCellAt(2).IntegerValue = 3;
+            //Operand_CTGTop8_CONF1.GetCellAt(2).IntegerValue = 3;
 
-            Operand_CTGTop8_CONF1.Target = 1;
+            //Operand_CTGTop8_CONF1.Target = 1;
 
-            Operand_CTGTop8_CONF1.Weight = 1;
+            //Operand_CTGTop8_CONF1.Weight = 1;
 
-            IMFERow Operand_CTGTop9_CONF1 = TheMFE.InsertNewOperandAt(9);
+            //IMFERow Operand_CTGTop9_CONF1 = TheMFE.InsertNewOperandAt(9);
 
-            Operand_CTGTop9_CONF1.ChangeType(MeritOperandType.CTGT);
+            //Operand_CTGTop9_CONF1.ChangeType(MeritOperandType.CTGT);
 
-            Operand_CTGTop9_CONF1.GetCellAt(2).IntegerValue = 5;
+            //Operand_CTGTop9_CONF1.GetCellAt(2).IntegerValue = 5;
 
-            Operand_CTGTop9_CONF1.Target = 1;
+            //Operand_CTGTop9_CONF1.Target = 1;
 
-            Operand_CTGTop9_CONF1.Weight = 0;
+            //Operand_CTGTop9_CONF1.Weight = 0;
 
-            IMFERow Operand_DIVIop23_CONF1 = TheMFE.InsertNewOperandAt(10);
+            IMFERow Operand_DIVIop23_CONF1 = TheMFE.InsertNewOperandAt(5);
 
             Operand_DIVIop23_CONF1.ChangeType(MeritOperandType.DIVI);
 
@@ -1415,13 +1476,13 @@ namespace Basicapp_start
 
             // CONF 2
 
-            IMFERow Operand_CONF2 = TheMFE.InsertNewOperandAt(11);
+            IMFERow Operand_CONF2 = TheMFE.InsertNewOperandAt(6);
 
             Operand_CONF2.ChangeType(MeritOperandType.CONF);
 
             Operand_CONF2.GetCellAt(2).IntegerValue = 2;
 
-            IMFERow Operand_REAYop12_CONF2 = TheMFE.InsertNewOperandAt(12);
+            IMFERow Operand_REAYop12_CONF2 = TheMFE.InsertNewOperandAt(7);
 
             Operand_REAYop12_CONF2.ChangeType(MeritOperandType.REAY);
 
@@ -1429,7 +1490,7 @@ namespace Basicapp_start
 
             Operand_REAYop12_CONF2.GetCellAt(7).DoubleValue = 1;
 
-            IMFERow Operand_REAYop13_CONF2 = TheMFE.InsertNewOperandAt(13);
+            IMFERow Operand_REAYop13_CONF2 = TheMFE.InsertNewOperandAt(8);
 
             Operand_REAYop13_CONF2.ChangeType(MeritOperandType.REAY);
 
@@ -1437,7 +1498,9 @@ namespace Basicapp_start
 
             Operand_REAYop13_CONF2.GetCellAt(7).DoubleValue = 1;
 
-            IMFERow Operand_RANGop14_CONF2 = TheMFE.InsertNewOperandAt(14);
+            Operand_REAYop13_CONF2.Weight = 1;
+
+            IMFERow Operand_RANGop14_CONF2 = TheMFE.InsertNewOperandAt(9);
 
             Operand_RANGop14_CONF2.ChangeType(MeritOperandType.RANG);
 
@@ -1447,74 +1510,74 @@ namespace Basicapp_start
 
             Operand_RANGop14_CONF2.Target = 0;
 
-            Operand_RANGop14_CONF2.Weight = 1;
+            Operand_RANGop14_CONF2.Weight = 0;
 
             Operand_RANGop14_CONF2.GetCellAt(7).DoubleValue = 1;
 
-            IMFERow Operand_EFLXop15_CONF2 = TheMFE.InsertNewOperandAt(15); // EFLX for operand 5
+            //IMFERow Operand_EFLXop15_CONF2 = TheMFE.InsertNewOperandAt(15); // EFLX for operand 5
 
-            Operand_EFLXop15_CONF2.ChangeType(MeritOperandType.EFLX);
+            //Operand_EFLXop15_CONF2.ChangeType(MeritOperandType.EFLX);
 
-            Operand_EFLXop15_CONF2.GetCellAt(2).IntegerValue = 2;
+            //Operand_EFLXop15_CONF2.GetCellAt(2).IntegerValue = 2;
 
-            Operand_EFLXop15_CONF2.GetCellAt(3).IntegerValue = 3;
+            //Operand_EFLXop15_CONF2.GetCellAt(3).IntegerValue = 3;
 
-            Operand_EFLXop15_CONF2.Target = MinF1;//Operand_EFLXop15_CONF2.GetCellAt(12).DoubleValue;
+            //Operand_EFLXop15_CONF2.Target = MinF1;//Operand_EFLXop15_CONF2.GetCellAt(12).DoubleValue;
 
-            Operand_EFLXop15_CONF2.Weight = 1;
+            //Operand_EFLXop15_CONF2.Weight = 1;
 
-            IMFERow Operand_EFLXop16_CONF2 = TheMFE.InsertNewOperandAt(16);
+            //IMFERow Operand_EFLXop16_CONF2 = TheMFE.InsertNewOperandAt(16);
 
-            Operand_EFLXop16_CONF2.ChangeType(MeritOperandType.EFLX);
+            //Operand_EFLXop16_CONF2.ChangeType(MeritOperandType.EFLX);
 
-            Operand_EFLXop16_CONF2.GetCellAt(2).IntegerValue = 4;
+            //Operand_EFLXop16_CONF2.GetCellAt(2).IntegerValue = 4;
 
-            Operand_EFLXop16_CONF2.GetCellAt(3).IntegerValue = 5;
+            //Operand_EFLXop16_CONF2.GetCellAt(3).IntegerValue = 5;
 
-            Operand_EFLXop16_CONF2.Target = MinF2;//Operand_EFLXop16_CONF2.GetCellAt(12).DoubleValue;
+            //Operand_EFLXop16_CONF2.Target = MinF2;//Operand_EFLXop16_CONF2.GetCellAt(12).DoubleValue;
 
-            Operand_EFLXop16_CONF2.Weight = 1;
+            //Operand_EFLXop16_CONF2.Weight = 1;
 
-            IMFERow Operand_EFLXop17_CONF2 = TheMFE.InsertNewOperandAt(17);
+            //IMFERow Operand_EFLXop17_CONF2 = TheMFE.InsertNewOperandAt(17);
 
-            Operand_EFLXop17_CONF2.ChangeType(MeritOperandType.EFLX);
+            //Operand_EFLXop17_CONF2.ChangeType(MeritOperandType.EFLX);
 
-            Operand_EFLXop17_CONF2.GetCellAt(2).IntegerValue = 6;
+            //Operand_EFLXop17_CONF2.GetCellAt(2).IntegerValue = 6;
 
-            Operand_EFLXop17_CONF2.GetCellAt(3).IntegerValue = 7;
+            //Operand_EFLXop17_CONF2.GetCellAt(3).IntegerValue = 7;
 
-            Operand_EFLXop17_CONF2.Target = MinF3;//Operand_EFLXop17_CONF2.GetCellAt(12).DoubleValue;
+            //Operand_EFLXop17_CONF2.Target = MinF3;//Operand_EFLXop17_CONF2.GetCellAt(12).DoubleValue;
 
-            Operand_EFLXop17_CONF2.Weight = 1;
+            //Operand_EFLXop17_CONF2.Weight = 1;
 
-            IMFERow Operand_CTGTop18_CONF2 = TheMFE.InsertNewOperandAt(18);
+            //IMFERow Operand_CTGTop18_CONF2 = TheMFE.InsertNewOperandAt(18);
 
-            Operand_CTGTop18_CONF2.ChangeType(MeritOperandType.CTGT);
+            //Operand_CTGTop18_CONF2.ChangeType(MeritOperandType.CTGT);
 
-            Operand_CTGTop18_CONF2.GetCellAt(2).IntegerValue = 3;
+            //Operand_CTGTop18_CONF2.GetCellAt(2).IntegerValue = 3;
 
-            Operand_CTGTop18_CONF2.Target = 1;
+            //Operand_CTGTop18_CONF2.Target = 1;
 
-            Operand_CTGTop18_CONF2.Weight = 1;
+            //Operand_CTGTop18_CONF2.Weight = 1;
 
-            IMFERow Operand_CTGTop19_CONF2 = TheMFE.InsertNewOperandAt(19);
+            //IMFERow Operand_CTGTop19_CONF2 = TheMFE.InsertNewOperandAt(19);
 
-            Operand_CTGTop19_CONF2.ChangeType(MeritOperandType.CTGT);
+            //Operand_CTGTop19_CONF2.ChangeType(MeritOperandType.CTGT);
 
-            Operand_CTGTop19_CONF2.GetCellAt(2).IntegerValue = 5;
+            //Operand_CTGTop19_CONF2.GetCellAt(2).IntegerValue = 5;
 
-            Operand_CTGTop19_CONF2.Target = 1;
+            //Operand_CTGTop19_CONF2.Target = 1;
 
-            Operand_CTGTop19_CONF2.Weight = 0;
+            //Operand_CTGTop19_CONF2.Weight = 0;
 
 
-            IMFERow Operand_DIVIop20_CONF2 = TheMFE.InsertNewOperandAt(20);
+            IMFERow Operand_DIVIop20_CONF2 = TheMFE.InsertNewOperandAt(10);
 
             Operand_DIVIop20_CONF2.ChangeType(MeritOperandType.DIVI);
 
-            Operand_DIVIop20_CONF2.GetCellAt(2).IntegerValue = 12;
+            Operand_DIVIop20_CONF2.GetCellAt(2).IntegerValue = 7;
 
-            Operand_DIVIop20_CONF2.GetCellAt(3).IntegerValue = 13;
+            Operand_DIVIop20_CONF2.GetCellAt(3).IntegerValue = 8;
 
             Operand_DIVIop20_CONF2.Target = 1.08;
 
@@ -1527,13 +1590,13 @@ namespace Basicapp_start
 
             // CONF 3
 
-            IMFERow Operand_CONF3 = TheMFE.InsertNewOperandAt(21);
+            IMFERow Operand_CONF3 = TheMFE.InsertNewOperandAt(11);
 
             Operand_CONF3.ChangeType(MeritOperandType.CONF);
 
             Operand_CONF3.GetCellAt(2).IntegerValue = 3;
 
-            IMFERow Operand_REAYop22_CONF3 = TheMFE.InsertNewOperandAt(22);
+            IMFERow Operand_REAYop22_CONF3 = TheMFE.InsertNewOperandAt(12);
 
             Operand_REAYop22_CONF3.ChangeType(MeritOperandType.REAY);
 
@@ -1541,7 +1604,7 @@ namespace Basicapp_start
 
             Operand_REAYop22_CONF3.GetCellAt(7).DoubleValue = 1;
 
-            IMFERow Operand_REAYop33_CONF3 = TheMFE.InsertNewOperandAt(23);
+            IMFERow Operand_REAYop33_CONF3 = TheMFE.InsertNewOperandAt(13);
 
             Operand_REAYop33_CONF3.ChangeType(MeritOperandType.REAY);
 
@@ -1549,7 +1612,9 @@ namespace Basicapp_start
 
             Operand_REAYop33_CONF3.GetCellAt(7).DoubleValue = 1;
 
-            IMFERow Operand_RANGop24_CONF3 = TheMFE.InsertNewOperandAt(24);
+            Operand_REAYop33_CONF3.Weight = 1;
+
+            IMFERow Operand_RANGop24_CONF3 = TheMFE.InsertNewOperandAt(14);
 
             Operand_RANGop24_CONF3.ChangeType(MeritOperandType.RANG);
 
@@ -1559,74 +1624,74 @@ namespace Basicapp_start
 
             Operand_RANGop24_CONF3.Target = 0;
 
-            Operand_RANGop24_CONF3.Weight = 1;
+            Operand_RANGop24_CONF3.Weight = 0;
 
             Operand_RANGop24_CONF3.GetCellAt(7).DoubleValue = 1;
 
-            IMFERow Operand_EFLXop25_CONF3 = TheMFE.InsertNewOperandAt(25); // EFLX for operand 5
+            //IMFERow Operand_EFLXop25_CONF3 = TheMFE.InsertNewOperandAt(25); // EFLX for operand 5
 
-            Operand_EFLXop25_CONF3.ChangeType(MeritOperandType.EFLX);
+            //Operand_EFLXop25_CONF3.ChangeType(MeritOperandType.EFLX);
 
-            Operand_EFLXop25_CONF3.GetCellAt(2).IntegerValue = 2;
+            //Operand_EFLXop25_CONF3.GetCellAt(2).IntegerValue = 2;
 
-            Operand_EFLXop25_CONF3.GetCellAt(3).IntegerValue = 3;
+            //Operand_EFLXop25_CONF3.GetCellAt(3).IntegerValue = 3;
 
-            Operand_EFLXop25_CONF3.Target = MinF1;//Operand_EFLXop15_CONF2.GetCellAt(12).DoubleValue;
+            //Operand_EFLXop25_CONF3.Target = MinF1;//Operand_EFLXop15_CONF2.GetCellAt(12).DoubleValue;
 
-            Operand_EFLXop25_CONF3.Weight = 1;
+            //Operand_EFLXop25_CONF3.Weight = 1;
 
-            IMFERow Operand_EFLXop26_CONF3 = TheMFE.InsertNewOperandAt(26);
+            //IMFERow Operand_EFLXop26_CONF3 = TheMFE.InsertNewOperandAt(26);
 
-            Operand_EFLXop26_CONF3.ChangeType(MeritOperandType.EFLX);
+            //Operand_EFLXop26_CONF3.ChangeType(MeritOperandType.EFLX);
 
-            Operand_EFLXop26_CONF3.GetCellAt(2).IntegerValue = 4;
+            //Operand_EFLXop26_CONF3.GetCellAt(2).IntegerValue = 4;
 
-            Operand_EFLXop26_CONF3.GetCellAt(3).IntegerValue = 5;
+            //Operand_EFLXop26_CONF3.GetCellAt(3).IntegerValue = 5;
 
-            Operand_EFLXop26_CONF3.Target = MinF2;//Operand_EFLXop26_CONF3.GetCellAt(12).DoubleValue;
+            //Operand_EFLXop26_CONF3.Target = MinF2;//Operand_EFLXop26_CONF3.GetCellAt(12).DoubleValue;
 
-            Operand_EFLXop26_CONF3.Weight = 1;
+            //Operand_EFLXop26_CONF3.Weight = 1;
 
-            IMFERow Operand_EFLXop27_CONF3 = TheMFE.InsertNewOperandAt(27);
+            //IMFERow Operand_EFLXop27_CONF3 = TheMFE.InsertNewOperandAt(27);
 
-            Operand_EFLXop27_CONF3.ChangeType(MeritOperandType.EFLX);
+            //Operand_EFLXop27_CONF3.ChangeType(MeritOperandType.EFLX);
 
-            Operand_EFLXop27_CONF3.GetCellAt(2).IntegerValue = 6;
+            //Operand_EFLXop27_CONF3.GetCellAt(2).IntegerValue = 6;
 
-            Operand_EFLXop27_CONF3.GetCellAt(3).IntegerValue = 7;
+            //Operand_EFLXop27_CONF3.GetCellAt(3).IntegerValue = 7;
 
-            Operand_EFLXop27_CONF3.Target = MinF3;//Operand_EFLXop27_CONF3.GetCellAt(12).DoubleValue;
+            //Operand_EFLXop27_CONF3.Target = MinF3;//Operand_EFLXop27_CONF3.GetCellAt(12).DoubleValue;
 
-            Operand_EFLXop27_CONF3.Weight = 1;
+            //Operand_EFLXop27_CONF3.Weight = 1;
 
-            IMFERow Operand_CTGTop28_CONF3 = TheMFE.InsertNewOperandAt(28);
+            //IMFERow Operand_CTGTop28_CONF3 = TheMFE.InsertNewOperandAt(28);
 
-            Operand_CTGTop28_CONF3.ChangeType(MeritOperandType.CTGT);
+            //Operand_CTGTop28_CONF3.ChangeType(MeritOperandType.CTGT);
 
-            Operand_CTGTop28_CONF3.GetCellAt(2).IntegerValue = 3;
+            //Operand_CTGTop28_CONF3.GetCellAt(2).IntegerValue = 3;
 
-            Operand_CTGTop28_CONF3.Target = 1;
+            //Operand_CTGTop28_CONF3.Target = 1;
 
-            Operand_CTGTop28_CONF3.Weight = 1;
+            //Operand_CTGTop28_CONF3.Weight = 1;
 
-            IMFERow Operand_CTGTop29_CONF3 = TheMFE.InsertNewOperandAt(29);
+            //IMFERow Operand_CTGTop29_CONF3 = TheMFE.InsertNewOperandAt(29);
 
-            Operand_CTGTop29_CONF3.ChangeType(MeritOperandType.CTGT);
+            //Operand_CTGTop29_CONF3.ChangeType(MeritOperandType.CTGT);
 
-            Operand_CTGTop29_CONF3.GetCellAt(2).IntegerValue = 5;
+            //Operand_CTGTop29_CONF3.GetCellAt(2).IntegerValue = 5;
 
-            Operand_CTGTop29_CONF3.Target = 1;
+            //Operand_CTGTop29_CONF3.Target = 1;
 
-            Operand_CTGTop29_CONF3.Weight = 0;
+            //Operand_CTGTop29_CONF3.Weight = 0;
 
 
-            IMFERow Operand_DIVIop30_CONF3 = TheMFE.InsertNewOperandAt(30);
+            IMFERow Operand_DIVIop30_CONF3 = TheMFE.InsertNewOperandAt(15);
 
             Operand_DIVIop30_CONF3.ChangeType(MeritOperandType.DIVI);
 
-            Operand_DIVIop30_CONF3.GetCellAt(2).IntegerValue = 22;
+            Operand_DIVIop30_CONF3.GetCellAt(2).IntegerValue = 12;
 
-            Operand_DIVIop30_CONF3.GetCellAt(3).IntegerValue = 23;
+            Operand_DIVIop30_CONF3.GetCellAt(3).IntegerValue = 13;
 
             Operand_DIVIop30_CONF3.Target = 2.92;
 
@@ -1722,6 +1787,163 @@ namespace Basicapp_start
             MessageBox.Show("Please close one of the two running Zemax Applications");
 
             throw new Exception(errorMessage);
+        }
+
+        private void Mintracktextbox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ClearListbutton_Click(object sender, EventArgs e)
+        {
+            MaxtrackList.Clear();
+        }
+
+
+        private void DistancebackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+
+            //DistanceprogressBar.Value = e.ProgressPercentage;
+
+            DistanceChecklabel.Text = e.ProgressPercentage.ToString() + "%";
+        }
+
+        private void DistancebackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                DistanceChecklabel.Text = "Proccessing Cancelled";
+            }
+
+            else
+                if (e.Error != null)
+                {
+                    DistanceChecklabel.Text = e.Error.Message;
+                }
+
+                else
+                {
+                    Maxtracktextbox.Text = e.Result.ToString();
+
+                    //Mintracktextbox.Text = e.Result.ToString();
+
+                }
+        }
+
+        private void DistancebackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //InputMax = double.Parse(Magmaxinput.Text);
+
+            //InputMin = double.Parse(MinMaginput.Text);
+
+            //InputbeamDia = double.Parse(BeamDiaInput.Text);
+
+            //EPDConstrainF1 = (double)1.5 * InputbeamDia;
+
+            //EPDConstrainF3 = (double)(1 / InputMin) * 1.5 * InputbeamDia;
+
+            //CopyInputMin = InputMin;
+
+            //perm(focallength1, focallength2, focallength3, EPD1, EPD2, EPD3);
+
+
+
+            //if (!MaxtrackList.Any())
+            //{
+            //    //Empty Magnification text box
+
+            //    Magmaxinput.Text = " ";
+            //    MinMaginput.Text = " ";
+            //}
+
+            //else
+
+            //    if (InputMax > InputMin)
+            //    {
+            //        for (int c = 0; c < F1List.Count; c++)
+            //        {
+            //            Thread.Sleep(10);
+
+            //            if (DistancebackgroundWorker.CancellationPending)
+            //            {
+            //                e.Cancel = true;
+
+            //                DistancebackgroundWorker.ReportProgress(c/100);
+
+            //                return;
+            //            }
+
+            //            DistancebackgroundWorker.ReportProgress(c);
+
+
+            //            for (double x = InputMin; x < InputMax; x += 0.1)
+            //            {
+            //                Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (InputMin * F3List[c])), 4);
+
+            //                d1.Add(Distance1Add);
+
+
+            //            }
+
+            //            bool Distance1 = d1.All(elements => elements >= 10);
+
+            //            if (Distance1 == true)
+            //            {
+            //                CopyMaxtrackList.Add(MaxtrackList[c]);
+
+            //                CopyF1List.Add(F1List[c]);
+
+            //                CopyF2List.Add(F2List[c]);
+
+            //                CopyF3List.Add(F3List[c]);
+
+            //                CopyLensList1.Add(LensList1[c]);
+
+            //                CopyLensList2.Add(LensList2[c]);
+
+            //                CopyLensList3.Add(LensList3[c]);
+
+
+
+
+            //            }
+
+
+
+            //        }
+
+            //        for (int y = 0; y < CopyMaxtrackList.Count; y++)
+            //        {
+            //            Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
+
+            //        }
+
+            //        e.Result = CopyMaxtrackList.Max().ToString();
+
+                    
+
+            //    }
+
+                //else
+
+                //    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
+
+
+
+
+
+        }
+
+        private void Cancelbutton_Click(object sender, EventArgs e)
+        {
+            if(DistancebackgroundWorker.IsBusy)
+            {
+                DistancebackgroundWorker.CancelAsync();
+            }
+            else
+            {
+                DistanceChecklabel.Text = "No Operation to cancel";
+            }
         }
 
 
