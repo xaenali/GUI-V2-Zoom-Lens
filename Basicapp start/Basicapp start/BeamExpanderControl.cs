@@ -61,15 +61,18 @@ namespace Basicapp_start
         public static List<double> EPD1List = new List<double>(); // Initialize List for Entrance pupil Dia 1
         public static List<double> EPD2List = new List<double>(); // Initialize List for Entrance pupil Dia  2
         public static List<double> EPD3List = new List<double>(); // Initialize List for fEntrance pupil Dia  3
+        public static List<double> CopyEPD1List = new List<double>(); // Copy Initialize List for Entrance pupil Dia 1
+        public static List<double> CopyEPD2List = new List<double>(); // Copy Initialize List for Entrance pupil Dia  2
+        public static List<double> CopyEPD3List = new List<double>(); // Copy Initialize List for fEntrance pupil Dia  3
         public static List<string> LensPartList1 = new List<string>(); // Initialize Lens part number for focallength 1------ used with excel
         public static List<string> LensPartList2 = new List<string>(); // Initialize Lens part number for focallength 2------ used with excel
         public static List<string> LensPartList3 = new List<string>(); // Initialize Lens part number for focallength 3------ used with excel
         public static List<string> LensList1 = new List<string>(); // Initialize Lens part number for focallength 1
         public static List<string> LensList2 = new List<string>(); // Initialize Lens part number for focallength 2
         public static List<string> LensList3 = new List<string>(); // Initialize Lens part number for focallength 3
-        public static List<string> CopyLensList1 = new List<string>(); // Initialize Lens part number for focallength 1
-        public static List<string> CopyLensList2 = new List<string>(); // Initialize Lens part number for focallength 2
-        public static List<string> CopyLensList3 = new List<string>(); // Initialize Lens part number for focallength 3
+        public static List<string> CopyLensList1 = new List<string>(); // Copy Initialize Lens part number for focallength 1
+        public static List<string> CopyLensList2 = new List<string>(); // Copy Initialize Lens part number for focallength 2
+        public static List<string> CopyLensList3 = new List<string>(); // Copy Initialize Lens part number for focallength 3
 
         public static List<string> VL1 = new List<string>(); // Initialize vender for focallength 1------ used with excel
         public static List<string> VL2 = new List<string>(); // Initialize vendor for focallength 2------ used with excel
@@ -77,6 +80,11 @@ namespace Basicapp_start
         public static List<string> vendorList1 = new List<string>(); // Initialize vendor for focallength 1
         public static List<string> vendorList2 = new List<string>(); // Initialize vendor for focallength 2
         public static List<string> vendorList3 = new List<string>(); // Initialize vendor for focallength 3
+        public static List<string> CopyvendorList1 = new List<string>(); // Copy Initialize vendor for focallength 1
+        public static List<string> CopyvendorList2 = new List<string>(); // Copy Initialize vendor for focallength 2
+        public static List<string> CopyvendorList3 = new List<string>(); // Copy Initialize vendor for focallength 3
+
+
 
         public static bool Maxtrackischecked;
         public static bool Mintrackischecked;
@@ -187,8 +195,7 @@ namespace Basicapp_start
             }
 
             else
-
-                if (InputMax > InputMin)
+                if (MaxtrackList.Any())
                 {
                     for (int c = 0; c < F1List.Count; c++)
                     {
@@ -214,11 +221,25 @@ namespace Basicapp_start
 
                             CopyF3List.Add(F3List[c]);
 
+                            CopyEPD1List.Add(EPD1List[c]);
+
+                            CopyEPD2List.Add(EPD2List[c]);
+
+                            CopyEPD3List.Add(EPD3List[c]);
+
                             CopyLensList1.Add(LensList1[c]);
 
                             CopyLensList2.Add(LensList2[c]);
 
                             CopyLensList3.Add(LensList3[c]);
+
+                            CopyvendorList1.Add(vendorList1[c]);
+
+                            CopyvendorList2.Add(vendorList2[c]);
+
+                            CopyvendorList3.Add(vendorList3[c]);
+
+
 
 
                         }
@@ -227,22 +248,44 @@ namespace Basicapp_start
 
                     }
 
-                    for (int y = 0; y < CopyMaxtrackList.Count; y++)
-                    {
-                        Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
 
-                    }
+                }
 
-                    Maxtracktextbox.Text = CopyMaxtrackList.Max().ToString();
 
-                    Mintracktextbox.Text = CopyMaxtrackList.Min().ToString();
+            if (InputMax < InputMin)
+            {
+                MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
+
+                Magmaxinput.Text = " ";
+                MinMaginput.Text = " ";
+
+            }
+
+            else
+                if (!CopyMaxtrackList.Any())
+                {
+                    MessageBox.Show("There is no possible combination for such inputs in Database");
 
                 }
 
                 else
 
-                    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
+                    if (InputMax > InputMin && CopyMaxtrackList.Any())
+                    {
+                        for (int y = 0; y < CopyMaxtrackList.Count; y++)
+                        {
+                            Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
 
+                        }
+
+                        Maxtracktextbox.Text = CopyMaxtrackList.Max().ToString();
+
+                        Mintracktextbox.Text = CopyMaxtrackList.Min().ToString();
+
+
+                    }
+
+    
 
 
         }
@@ -344,11 +387,11 @@ namespace Basicapp_start
             //check for emptiness of a List for no suitable combination of focal length
 
 
-            if (!MaxtrackList.Any())
-            {
-                MessageBox.Show("There is no suitable focal length in database for this configuration");
+            //if (!MaxtrackList.Any())
+            //{
+            //    MessageBox.Show("There is no suitable focal length in database for this configuration");
 
-            }
+            //}
            
                 return 0;
 
@@ -589,17 +632,17 @@ namespace Basicapp_start
 
                     MaxF3 = CopyF3List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
-                    LP1 = LensList1[MaxtrackList.IndexOf(MaxtrackList.Max())];
+                    LP1 = CopyLensList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
-                    LP2 = LensList2[MaxtrackList.IndexOf(MaxtrackList.Max())];
+                    LP2 = CopyLensList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
-                    LP3 = LensList3[MaxtrackList.IndexOf(MaxtrackList.Max())];
+                    LP3 = CopyLensList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
-                    VendorL1 = vendorList1[MaxtrackList.IndexOf(MaxtrackList.Max())];
+                    VendorL1 = CopyvendorList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
-                    VendorL2 = vendorList2[MaxtrackList.IndexOf(MaxtrackList.Max())];
+                    VendorL2 = CopyvendorList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
-                    VendorL3 = vendorList3[MaxtrackList.IndexOf(MaxtrackList.Max())];
+                    VendorL3 = CopyvendorList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
 
                     // Calculate here again all values needed for distance calculation
 
@@ -682,17 +725,17 @@ namespace Basicapp_start
 
                     MinF3 = CopyF3List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
-                    LP1 = LensList1[MaxtrackList.IndexOf(MaxtrackList.Min())];
+                    LP1 = CopyLensList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
-                    LP2 = LensList2[MaxtrackList.IndexOf(MaxtrackList.Min())];
+                    LP2 = CopyLensList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
-                    LP3 = LensList3[MaxtrackList.IndexOf(MaxtrackList.Min())];
+                    LP3 = CopyLensList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
-                    VendorL1 = vendorList1[MaxtrackList.IndexOf(MaxtrackList.Min())];
+                    VendorL1 = CopyvendorList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
-                    VendorL2 = vendorList2[MaxtrackList.IndexOf(MaxtrackList.Min())];
+                    VendorL2 = CopyvendorList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
-                    VendorL3 = vendorList3[MaxtrackList.IndexOf(MaxtrackList.Min())];
+                    VendorL3 = CopyvendorList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
 
 
                     // Calculate here again all values needed for distance calculation
@@ -912,7 +955,7 @@ namespace Basicapp_start
             TheSystemData.Aperture.ApertureValue = InputbeamDia;
             TheSystemData.Aperture.SemiDiameterMargin = 2;
             TheSystemData.Aperture.AFocalImageSpace = true;
-            TheSystemData.Wavelengths.GetWavelength(1).Wavelength = 1.06;
+            TheSystemData.Wavelengths.GetWavelength(1).Wavelength = 1.0641;
 
 
             // Add Material Catlogs
@@ -1797,6 +1840,18 @@ namespace Basicapp_start
         private void ClearListbutton_Click(object sender, EventArgs e)
         {
             MaxtrackList.Clear();
+
+            CopyMaxtrackList.Clear();
+
+            Maxtracktextbox.Clear();
+
+            Mintracktextbox.Clear();
+
+            Magmaxinput.Clear();
+
+            MinMaginput.Clear();
+
+            return;
         }
 
 
@@ -1823,15 +1878,47 @@ namespace Basicapp_start
 
                 else
                 {
-                    Maxtracktextbox.Text = e.Result.ToString();
+                    //if (InputMax < InputMin)
+                    //{
+                    //    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
 
-                    //Mintracktextbox.Text = e.Result.ToString();
+                    //    Magmaxinput.Text = " ";
+                    //    MinMaginput.Text = " ";
+
+                    //}
+
+                    //else
+                    //    if (!CopyMaxtrackList.Any())
+                    //    {
+                    //        MessageBox.Show("There is no possible combination for such inputs in Database");
+
+                    //    }
+
+                    //    else
+
+                    //        if (InputMax > InputMin && CopyMaxtrackList.Any())
+                    //        {
+                    //            for (int y = 0; y < CopyMaxtrackList.Count; y++)
+                    //            {
+                    //                Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
+
+                    //            }
+
+                                // Maxtracktextbox.Text = e.Result.ToString();
+
+                                Mintracktextbox.Text = e.Result.ToString();
+
+
+                            //}
+
+                  //Messagelabel.Text = "Sum = " + e.Result.ToString();
 
                 }
         }
 
         private void DistancebackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+
             //InputMax = double.Parse(Magmaxinput.Text);
 
             //InputMin = double.Parse(MinMaginput.Text);
@@ -1846,7 +1933,7 @@ namespace Basicapp_start
 
             //perm(focallength1, focallength2, focallength3, EPD1, EPD2, EPD3);
 
-
+            //MessageBox.Show("Passed Permutation");
 
             //if (!MaxtrackList.Any())
             //{
@@ -1857,23 +1944,13 @@ namespace Basicapp_start
             //}
 
             //else
-
-            //    if (InputMax > InputMin)
+            //    if (MaxtrackList.Any())
             //    {
+            //        MessageBox.Show("Passed Permutation 2nd ttime");
+
             //        for (int c = 0; c < F1List.Count; c++)
             //        {
             //            Thread.Sleep(10);
-
-            //            if (DistancebackgroundWorker.CancellationPending)
-            //            {
-            //                e.Cancel = true;
-
-            //                DistancebackgroundWorker.ReportProgress(c/100);
-
-            //                return;
-            //            }
-
-            //            DistancebackgroundWorker.ReportProgress(c);
 
 
             //            for (double x = InputMin; x < InputMax; x += 0.1)
@@ -1897,41 +1974,99 @@ namespace Basicapp_start
 
             //                CopyF3List.Add(F3List[c]);
 
+            //                CopyEPD1List.Add(EPD1List[c]);
+
+            //                CopyEPD2List.Add(EPD2List[c]);
+
+            //                CopyEPD3List.Add(EPD3List[c]);
+
             //                CopyLensList1.Add(LensList1[c]);
 
             //                CopyLensList2.Add(LensList2[c]);
 
             //                CopyLensList3.Add(LensList3[c]);
 
+            //                CopyvendorList1.Add(vendorList1[c]);
+
+            //                CopyvendorList2.Add(vendorList2[c]);
+
+            //                CopyvendorList3.Add(vendorList3[c]);
+
+            //                DistancebackgroundWorker.ReportProgress(c);
 
 
 
+            //            }
+
+            //            if (DistancebackgroundWorker.CancellationPending)
+            //            {
+            //                e.Cancel = true;
+
+            //                DistancebackgroundWorker.ReportProgress(0);
+
+            //                return;
             //            }
 
 
 
             //        }
 
-            //        for (int y = 0; y < CopyMaxtrackList.Count; y++)
-            //        {
-            //            Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
+            //    }
 
-            //        }
+            //if (InputMax < InputMin)
+            //{
+            //    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
 
-            //        e.Result = CopyMaxtrackList.Max().ToString();
+            //    Magmaxinput.Text = " ";
+            //    MinMaginput.Text = " ";
 
-                    
+            //}
+
+            //else
+            //    if (!CopyMaxtrackList.Any())
+            //    {
+            //        MessageBox.Show("There is no possible combination for such inputs in Database");
 
             //    }
 
-                //else
+            //    else
 
-                //    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
+            //        if (InputMax > InputMin && CopyMaxtrackList.Any())
+            //        {
+            //            for (int y = 0; y < CopyMaxtrackList.Count; y++)
+            //            {
+            //                Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
+
+            //            }
 
 
+            //        }
 
 
+            //e.Result = CopyMaxtrackList.Min();
+            //int sum = 0;
 
+            //for(int i = 0; i < 100; i++)
+            //{
+            //    Thread.Sleep(100);
+
+            //    sum = sum + i;
+
+            //    DistancebackgroundWorker.ReportProgress(i);
+
+            //    if (DistancebackgroundWorker.CancellationPending)
+            //    {
+            //        e.Cancel = true;
+
+            //        DistancebackgroundWorker.ReportProgress(0);
+
+            //        return;
+            //    }
+
+            //}
+
+
+            //e.Result = sum;
         }
 
         private void Cancelbutton_Click(object sender, EventArgs e)
@@ -1943,6 +2078,353 @@ namespace Basicapp_start
             else
             {
                 DistanceChecklabel.Text = "No Operation to cancel";
+            }
+        }
+
+        private void InputTextbox_TextChanged(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void InputTextbox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+        }
+
+        private void InputTextbox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                //if (InputIndividualMag == null && buttonMaginputs !=null)
+                //{
+                Input = double.Parse(InputTextbox.Text);
+
+                if (MaxtrackRadioButton.Checked == true)
+                {
+                    // Take the values for focallengths, Lensparts and vendors as obtained at Maximum track length
+
+                    MaxF1 = CopyF1List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
+
+                    MaxF2 = CopyF2List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
+
+                    MaxF3 = CopyF3List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
+
+                    LP1 = CopyLensList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
+
+                    LP2 = CopyLensList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
+
+                    LP3 = CopyLensList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
+
+                    VendorL1 = CopyvendorList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
+
+                    VendorL2 = CopyvendorList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
+
+                    VendorL3 = CopyvendorList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Max())];
+
+                    // Calculate here again all values needed for distance calculation
+
+                    //Maxa1 = Math.Round((double)MaxF1 + MaxF2, 4);
+
+                    //MaxMxratioMy = Math.Round((double)MaxF1 / MaxF3, 4);
+
+                    //Maxa2 = Math.Round((double)MaxF2 + MaxF3, 4);
+
+                    //Maxb1 = Math.Round((double)(MaxF1 * MaxF2 / MaxF3), 4);
+
+                    //Maxb2 = Math.Round((double)(MaxF2 * MaxF3) / MaxF1, 4);
+
+                    //MaxMx = Math.Round((double)-Maxa2 / Maxb2, 4);
+
+                    //MaxMy = Math.Round((double)-Maxb1 / Maxa1, 4);
+
+
+                    if ((Input <= InputMax) && (Input >= InputMin))
+                    {
+
+                        //Calculate d1 and d2 for the Input Magnification
+
+                        Maxd1 = Math.Round((double)MaxF1 + MaxF2 + ((MaxF1 * MaxF2) / (Input * MaxF3)), 4);
+
+                        Maxd2 = Math.Round((double)MaxF2 + MaxF3 + ((MaxF2 * MaxF3 * Input) / (MaxF1)), 4);
+
+                        if ((Maxd1 >= -0.012) && (Maxd1 < 0))
+                        {
+                            Maxd1 = 0;
+                        }
+                        else
+
+                            if ((Maxd2 >= -0.012) && (Maxd2 < 0))
+                            {
+                                Maxd2 = 0;
+                            }
+
+                        Distance1Testbox.Text = Maxd1.ToString();
+
+                        Distance2Texbox.Text = Maxd2.ToString();
+
+                        // Add distances to temporay list and use later to add these as thickness in Zemax LDE
+
+                        Temp1.Add(Maxd1);
+
+                        Temp2.Add(Maxd2);
+
+                        // Add Lenspart to temporay list and use later to add these in Zemax LDE
+
+                        //LPTemp1.Add(LP1);
+
+                        //LPTemp2.Add(LP2);
+
+                        //LPTemp3.Add(LP3);
+
+
+
+                        //}
+
+                        //else
+
+                        if ((Input > InputMax) || (Input < InputMin))
+                        {
+
+                            MessageBox.Show("Please choose values between or equal to Max and Min Magnification");
+
+                        }
+
+                    }
+
+                }
+
+                else
+                    if (MinimumTrackButton.Checked == true)
+                    {
+                        MinF1 = CopyF1List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
+
+                        MinF2 = CopyF2List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
+
+                        MinF3 = CopyF3List[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
+
+                        LP1 = CopyLensList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
+
+                        LP2 = CopyLensList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
+
+                        LP3 = CopyLensList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
+
+                        VendorL1 = CopyvendorList1[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
+
+                        VendorL2 = CopyvendorList2[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
+
+                        VendorL3 = CopyvendorList3[CopyMaxtrackList.IndexOf(CopyMaxtrackList.Min())];
+
+
+                        // Calculate here again all values needed for distance calculation
+
+                        //Mina1 = Math.Round((double)MinF1 + MinF2, 4);
+
+                        //MinMxratioMy = Math.Round((double)MinF1 / MinF3, 4);
+
+                        //Mina2 = Math.Round((double)MinF2 + MinF3, 4);
+
+                        //Minb1 = Math.Round((double)(MinF1 * MinF2 / MinF3), 4);
+
+                        //Minb2 = Math.Round((double)(MinF2 * MinF3) / MinF1, 4);
+
+                        //MinMx = Math.Round((double)-Mina2 / Minb2, 4);
+
+                        //MinMy = Math.Round((double)-Minb1 / Mina1, 4);
+
+
+                        if ((Input <= InputMax) && (Input >= InputMin))
+                        {
+
+
+                            //Calculate d1 and d2 for the Input Magnification
+
+                            Mind1 = Math.Round((double)MinF1 + MinF2 + ((MinF1 * MinF2) / (Input * MinF3)), 4);
+
+                            Mind2 = Math.Round((double)MinF2 + MinF3 + ((MinF2 * MinF3 * Input) / (MinF1)), 4);
+
+                            if ((Mind1 >= -0.012) && (Mind1 < 0))
+                            {
+                                Mind1 = 0;
+                            }
+                            else
+
+                                if ((Mind2 >= -0.012) && (Mind2 < 0))
+                                {
+                                    Mind2 = 0;
+                                }
+
+                            Distance1Testbox.Text = Mind1.ToString();
+
+                            Distance2Texbox.Text = Mind2.ToString();
+
+
+                            // Add distances to temporay list and use later to add these as thickness in Zemax LDE
+
+                            Temp1.Add(Mind1);
+
+                            Temp2.Add(Mind2);
+
+                            // Add Lensparts to temporay list and use later to add these in Zemax LDE
+
+                            //LPTemp1.Add(LP1);
+
+                            //LPTemp2.Add(LP2);
+
+                            //LPTemp3.Add(LP3);
+
+                        }
+
+                        else
+
+                            if ((Input > InputMax) || (Input < InputMin))
+                            {
+
+                                MessageBox.Show("Please choose values between or equal to Max and Min Magnification");
+
+                            }
+
+                    }
+
+                //}
+
+                //else
+                //{
+                //    MessageBox.Show("Please Enter the Magnifications");
+                //}
+
+            }
+
+        }
+
+        private void buttonMaginputs_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                //if (!DistancebackgroundWorker.IsBusy)
+                //{
+                //    DistancebackgroundWorker.RunWorkerAsync();
+                //}
+
+                //else
+                //{
+                //    Messagelabel.Text = ("Busy processign please wait");
+
+                //}
+
+                InputMax = double.Parse(Magmaxinput.Text);
+
+                InputMin = double.Parse(MinMaginput.Text);
+
+                InputbeamDia = double.Parse(BeamDiaInput.Text);
+
+                EPDConstrainF1 = (double)1.5 * InputbeamDia;
+
+                EPDConstrainF3 = (double)(1 / InputMin) * 1.5 * InputbeamDia;
+
+                CopyInputMin = InputMin;
+
+                perm(focallength1, focallength2, focallength3, EPD1, EPD2, EPD3);
+
+
+
+                if (!MaxtrackList.Any())
+                {
+                    //Empty Magnification text box
+
+                    Magmaxinput.Text = " ";
+                    MinMaginput.Text = " ";
+                }
+
+                else
+                    if (MaxtrackList.Any())
+                    {
+                        for (int c = 0; c < F1List.Count; c++)
+                        {
+
+                            for (double x = InputMin; x < InputMax; x += 0.1)
+                            {
+                                Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (InputMin * F3List[c])), 4);
+
+                                d1.Add(Distance1Add);
+
+
+                            }
+
+                            bool Distance1 = d1.All(elements => elements >= 10);
+
+                            if (Distance1 == true)
+                            {
+                                CopyMaxtrackList.Add(MaxtrackList[c]);
+
+                                CopyF1List.Add(F1List[c]);
+
+                                CopyF2List.Add(F2List[c]);
+
+                                CopyF3List.Add(F3List[c]);
+
+                                CopyEPD1List.Add(EPD1List[c]);
+
+                                CopyEPD2List.Add(EPD2List[c]);
+
+                                CopyEPD3List.Add(EPD3List[c]);
+
+                                CopyLensList1.Add(LensList1[c]);
+
+                                CopyLensList2.Add(LensList2[c]);
+
+                                CopyLensList3.Add(LensList3[c]);
+
+                                CopyvendorList1.Add(vendorList1[c]);
+
+                                CopyvendorList2.Add(vendorList2[c]);
+
+                                CopyvendorList3.Add(vendorList3[c]);
+
+
+
+
+                            }
+
+
+
+                        }
+
+
+                    }
+
+
+                if (InputMax < InputMin)
+                {
+                    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
+
+                    Magmaxinput.Text = " ";
+                    MinMaginput.Text = " ";
+
+                }
+
+                else
+                    if (!CopyMaxtrackList.Any())
+                    {
+                        MessageBox.Show("There is no possible combination for such inputs in Database");
+
+                    }
+
+                    else
+
+                        if (InputMax > InputMin && CopyMaxtrackList.Any())
+                        {
+                            for (int y = 0; y < CopyMaxtrackList.Count; y++)
+                            {
+                                Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
+
+                            }
+
+                            Maxtracktextbox.Text = CopyMaxtrackList.Max().ToString();
+
+                            Mintracktextbox.Text = CopyMaxtrackList.Min().ToString();
+
+
+                        }
+
             }
         }
 

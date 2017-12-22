@@ -168,6 +168,9 @@
             this.InputTextbox.Name = "InputTextbox";
             this.InputTextbox.Size = new System.Drawing.Size(100, 20);
             this.InputTextbox.TabIndex = 51;
+            this.InputTextbox.TextChanged += new System.EventHandler(this.InputTextbox_TextChanged);
+            this.InputTextbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.InputTextbox_KeyDown);
+            this.InputTextbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.InputTextbox_KeyPress);
             // 
             // InputIndividualMag
             // 
@@ -256,6 +259,7 @@
             this.buttonMaginputs.Text = "Enter Input mags";
             this.buttonMaginputs.UseVisualStyleBackColor = true;
             this.buttonMaginputs.Click += new System.EventHandler(this.buttonMaginputs_Click);
+            this.buttonMaginputs.KeyDown += new System.Windows.Forms.KeyEventHandler(this.buttonMaginputs_KeyDown);
             // 
             // menuStrip1
             // 
