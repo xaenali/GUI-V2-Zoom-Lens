@@ -170,6 +170,7 @@ namespace Basicapp_start
 
             //}
 
+
             InputMax = double.Parse(Magmaxinput.Text);
 
             InputMin = double.Parse(MinMaginput.Text);
@@ -184,7 +185,7 @@ namespace Basicapp_start
 
             perm(focallength1, focallength2, focallength3, EPD1, EPD2, EPD3);
 
-
+            var watch = System.Diagnostics.Stopwatch.StartNew();
 
             if (!MaxtrackList.Any())
             {
@@ -192,22 +193,34 @@ namespace Basicapp_start
 
                 Magmaxinput.Text = " ";
                 MinMaginput.Text = " ";
+
+                if (InputMax < InputMin)
+                {
+                    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
+
+                    Magmaxinput.Text = " ";
+                    MinMaginput.Text = " ";
+
+                }
+
             }
 
             else
-                if (MaxtrackList.Any())
+                if (MaxtrackList.Any() && InputMax > InputMin)
                 {
                     for (int c = 0; c < F1List.Count; c++)
                     {
 
                         for (double x = InputMin; x < InputMax; x += 0.1)
                         {
-                            Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (InputMin * F3List[c])), 4);
+                            Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (CopyInputMin * F3List[c])), 4);
 
                             d1.Add(Distance1Add);
 
 
                         }
+
+
 
                         bool Distance1 = d1.All(elements => elements >= 10);
 
@@ -248,45 +261,55 @@ namespace Basicapp_start
 
                     }
 
-
-                }
-
-
-            if (InputMax < InputMin)
-            {
-                MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
-
-                Magmaxinput.Text = " ";
-                MinMaginput.Text = " ";
-
-            }
-
-            else
-                if (!CopyMaxtrackList.Any())
-                {
-                    MessageBox.Show("There is no possible combination for such inputs in Database");
-
-                }
-
-                else
-
-                    if (InputMax > InputMin && CopyMaxtrackList.Any())
+                    if (!CopyMaxtrackList.Any())
                     {
-                        for (int y = 0; y < CopyMaxtrackList.Count; y++)
-                        {
-                            Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
+                        MessageBox.Show("There is no possible combination for such inputs in Database");
 
-                        }
+                        MaxtrackList.Clear();
 
-                        Maxtracktextbox.Text = CopyMaxtrackList.Max().ToString();
+                        CopyMaxtrackList.Clear();
 
-                        Mintracktextbox.Text = CopyMaxtrackList.Min().ToString();
+                        Maxtracktextbox.Clear();
+
+                        Mintracktextbox.Clear();
+
+                        Magmaxinput.Clear();
+
+                        MinMaginput.Clear();
+
+                        Distance1listBoxCheck.Items.Clear();
+
+                        BeamDiaInput.Clear();
+
+                        d1.Clear();
 
 
                     }
 
-    
+                    else
 
+                        if (CopyMaxtrackList.Any())
+                        {
+                            for (int y = 0; y < CopyMaxtrackList.Count; y++)
+                            {
+                                Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
+
+                            }
+
+                            Maxtracktextbox.Text = CopyMaxtrackList.Max().ToString();
+
+                            Mintracktextbox.Text = CopyMaxtrackList.Min().ToString();
+
+
+                        }
+
+
+                }
+
+            watch.Stop();
+
+            Messagelabel.Text = watch.ElapsedMilliseconds.ToString();
+              
 
         }
 
@@ -387,11 +410,16 @@ namespace Basicapp_start
             //check for emptiness of a List for no suitable combination of focal length
 
 
-            //if (!MaxtrackList.Any())
-            //{
-            //    MessageBox.Show("There is no suitable focal length in database for this configuration");
+                if (!MaxtrackList.Any())
+                {
+                    //Magmaxinput.Text = " ";
+                    //MinMaginput.Text = " ";
+                    MessageBox.Show("There is no suitable focal length in database for this configuration");
+                    
+                   // return;
 
-            //}
+
+                }
            
                 return 0;
 
@@ -1851,14 +1879,19 @@ namespace Basicapp_start
 
             MinMaginput.Clear();
 
-            return;
+            Distance1listBoxCheck.Items.Clear();
+
+            BeamDiaInput.Clear();
+
+            d1.Clear();
+
         }
 
 
         private void DistancebackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
 
-            //DistanceprogressBar.Value = e.ProgressPercentage;
+            DistanceprogressBar.Value = e.ProgressPercentage;
 
             DistanceChecklabel.Text = e.ProgressPercentage.ToString() + "%";
         }
@@ -1919,131 +1952,162 @@ namespace Basicapp_start
         private void DistancebackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
 
-            //InputMax = double.Parse(Magmaxinput.Text);
+            InputMax = double.Parse(Magmaxinput.Text);
 
-            //InputMin = double.Parse(MinMaginput.Text);
+            InputMin = double.Parse(MinMaginput.Text);
 
-            //InputbeamDia = double.Parse(BeamDiaInput.Text);
+            InputbeamDia = double.Parse(BeamDiaInput.Text);
 
-            //EPDConstrainF1 = (double)1.5 * InputbeamDia;
+            EPDConstrainF1 = (double)1.5 * InputbeamDia;
 
-            //EPDConstrainF3 = (double)(1 / InputMin) * 1.5 * InputbeamDia;
+            EPDConstrainF3 = (double)(1 / InputMin) * 1.5 * InputbeamDia;
 
-            //CopyInputMin = InputMin;
+            CopyInputMin = InputMin;
 
-            //perm(focallength1, focallength2, focallength3, EPD1, EPD2, EPD3);
+            perm(focallength1, focallength2, focallength3, EPD1, EPD2, EPD3);
 
-            //MessageBox.Show("Passed Permutation");
+            //int g = 1;
 
-            //if (!MaxtrackList.Any())
-            //{
-            //    //Empty Magnification text box
-
-            //    Magmaxinput.Text = " ";
-            //    MinMaginput.Text = " ";
-            //}
-
-            //else
-            //    if (MaxtrackList.Any())
-            //    {
-            //        MessageBox.Show("Passed Permutation 2nd ttime");
-
-            //        for (int c = 0; c < F1List.Count; c++)
-            //        {
-            //            Thread.Sleep(10);
-
-
-            //            for (double x = InputMin; x < InputMax; x += 0.1)
-            //            {
-            //                Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (InputMin * F3List[c])), 4);
-
-            //                d1.Add(Distance1Add);
-
-
-            //            }
-
-            //            bool Distance1 = d1.All(elements => elements >= 10);
-
-            //            if (Distance1 == true)
-            //            {
-            //                CopyMaxtrackList.Add(MaxtrackList[c]);
-
-            //                CopyF1List.Add(F1List[c]);
-
-            //                CopyF2List.Add(F2List[c]);
-
-            //                CopyF3List.Add(F3List[c]);
-
-            //                CopyEPD1List.Add(EPD1List[c]);
-
-            //                CopyEPD2List.Add(EPD2List[c]);
-
-            //                CopyEPD3List.Add(EPD3List[c]);
-
-            //                CopyLensList1.Add(LensList1[c]);
-
-            //                CopyLensList2.Add(LensList2[c]);
-
-            //                CopyLensList3.Add(LensList3[c]);
-
-            //                CopyvendorList1.Add(vendorList1[c]);
-
-            //                CopyvendorList2.Add(vendorList2[c]);
-
-            //                CopyvendorList3.Add(vendorList3[c]);
-
-            //                DistancebackgroundWorker.ReportProgress(c);
+            var watch = System.Diagnostics.Stopwatch.StartNew();
 
 
 
-            //            }
+            if (!MaxtrackList.Any())
+            {
+                //Empty Magnification text box
 
-            //            if (DistancebackgroundWorker.CancellationPending)
-            //            {
-            //                e.Cancel = true;
+                Magmaxinput.Text = " ";
+                MinMaginput.Text = " ";
 
-            //                DistancebackgroundWorker.ReportProgress(0);
+                if (InputMax < InputMin)
+                {
+                    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
 
-            //                return;
-            //            }
+                    Magmaxinput.Text = " ";
+                    MinMaginput.Text = " ";
 
+                }
 
+            }
 
-            //        }
-
-            //    }
-
-            //if (InputMax < InputMin)
-            //{
-            //    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
-
-            //    Magmaxinput.Text = " ";
-            //    MinMaginput.Text = " ";
-
-            //}
-
-            //else
-            //    if (!CopyMaxtrackList.Any())
-            //    {
-            //        MessageBox.Show("There is no possible combination for such inputs in Database");
-
-            //    }
-
-            //    else
-
-            //        if (InputMax > InputMin && CopyMaxtrackList.Any())
-            //        {
-            //            for (int y = 0; y < CopyMaxtrackList.Count; y++)
-            //            {
-            //                Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
-
-            //            }
+            else
 
 
-            //        }
+                if (MaxtrackList.Any() && InputMax > InputMin)
+                {
+                    for (int c = 0; c < F1List.Count; c++)
+                    {
+                        Thread.Sleep(10);
+
+                        //g = (c / g) * 1000000;
+
+                        DistancebackgroundWorker.ReportProgress(c);
+
+                        // g++;
 
 
-            //e.Result = CopyMaxtrackList.Min();
+                        for (double x = InputMin; x < InputMax; x += 0.1)
+                        {
+                            Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (CopyInputMin * F3List[c])), 4);
+
+                            d1.Add(Distance1Add);
+
+
+                        }
+
+                        if (DistancebackgroundWorker.CancellationPending)
+                        {
+                            e.Cancel = true;
+
+                            DistancebackgroundWorker.ReportProgress(0);
+
+                            return;
+                        }
+
+
+                        bool Distance1 = d1.All(elements => elements >= 10);
+
+                        if (Distance1 == true)
+                        {
+                            CopyMaxtrackList.Add(MaxtrackList[c]);
+
+                            CopyF1List.Add(F1List[c]);
+
+                            CopyF2List.Add(F2List[c]);
+
+                            CopyF3List.Add(F3List[c]);
+
+                            CopyEPD1List.Add(EPD1List[c]);
+
+                            CopyEPD2List.Add(EPD2List[c]);
+
+                            CopyEPD3List.Add(EPD3List[c]);
+
+                            CopyLensList1.Add(LensList1[c]);
+
+                            CopyLensList2.Add(LensList2[c]);
+
+                            CopyLensList3.Add(LensList3[c]);
+
+                            CopyvendorList1.Add(vendorList1[c]);
+
+                            CopyvendorList2.Add(vendorList2[c]);
+
+                            CopyvendorList3.Add(vendorList3[c]);
+
+
+
+
+                        }
+
+
+
+                    }
+
+                    if (!CopyMaxtrackList.Any())
+                    {
+                        MessageBox.Show("There is no possible combination for such inputs in Database");
+
+                        MaxtrackList.Clear();
+
+                        CopyMaxtrackList.Clear();
+
+                        Maxtracktextbox.Clear();
+
+                        Mintracktextbox.Clear();
+
+                        Magmaxinput.Clear();
+
+                        MinMaginput.Clear();
+
+                        Distance1listBoxCheck.Items.Clear();
+
+                        BeamDiaInput.Clear();
+
+                        d1.Clear();
+
+
+                    }
+
+                    else
+
+                        if (CopyMaxtrackList.Any())
+                        {
+                            for (int y = 0; y < CopyMaxtrackList.Count; y++)
+                            {
+                                Distance1listBoxCheck.Items.Add(CopyMaxtrackList[y]);
+
+                            }
+
+                            //Maxtracktextbox.Text = CopyMaxtrackList.Max().ToString();
+
+                            //Mintracktextbox.Text = CopyMaxtrackList.Min().ToString();
+
+                            e.Result = CopyMaxtrackList.Min();
+
+                        }
+
+                }
             //int sum = 0;
 
             //for(int i = 0; i < 100; i++)
@@ -2335,14 +2399,14 @@ namespace Basicapp_start
                 }
 
                 else
-                    if (MaxtrackList.Any())
+                    if (MaxtrackList.Any() && InputMax > InputMin)
                     {
                         for (int c = 0; c < F1List.Count; c++)
                         {
 
                             for (double x = InputMin; x < InputMax; x += 0.1)
                             {
-                                Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (InputMin * F3List[c])), 4);
+                                Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (CopyInputMin * F3List[c])), 4);
 
                                 d1.Add(Distance1Add);
 
@@ -2388,29 +2452,7 @@ namespace Basicapp_start
 
                         }
 
-
-                    }
-
-
-                if (InputMax < InputMin)
-                {
-                    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
-
-                    Magmaxinput.Text = " ";
-                    MinMaginput.Text = " ";
-
-                }
-
-                else
-                    if (!CopyMaxtrackList.Any())
-                    {
-                        MessageBox.Show("There is no possible combination for such inputs in Database");
-
-                    }
-
-                    else
-
-                        if (InputMax > InputMin && CopyMaxtrackList.Any())
+                        if (CopyMaxtrackList.Any())
                         {
                             for (int y = 0; y < CopyMaxtrackList.Count; y++)
                             {
@@ -2424,6 +2466,50 @@ namespace Basicapp_start
 
 
                         }
+
+                        else
+                        {
+                            //
+                        }
+                    }
+
+                //if (InputMax < InputMin)
+                //{
+                //    MessageBox.Show("Please Enter Maximum value to Max and Minimum to Min");
+
+                //    Magmaxinput.Text = " ";
+                //    MinMaginput.Text = " ";
+
+                //}
+
+                //else
+                //    if (!CopyMaxtrackList.Any())
+                //    {
+                //        MessageBox.Show("There is no possible combination for such inputs in Database");
+
+                //        MaxtrackList.Clear();
+
+                //        CopyMaxtrackList.Clear();
+
+                //        Maxtracktextbox.Clear();
+
+                //        Mintracktextbox.Clear();
+
+                //        Magmaxinput.Clear();
+
+                //        MinMaginput.Clear();
+
+                //        Distance1listBoxCheck.Items.Clear();
+
+                //        BeamDiaInput.Clear();
+
+
+                //    }
+
+                    //else
+
+
+
 
             }
         }
