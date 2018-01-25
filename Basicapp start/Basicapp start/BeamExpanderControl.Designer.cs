@@ -55,6 +55,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.analyzeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rayTraceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.paraxialRaytraceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.siedelCoefficientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ClearListbutton = new System.Windows.Forms.Button();
@@ -273,6 +274,7 @@
             this.menuStrip1.Size = new System.Drawing.Size(1502, 24);
             this.menuStrip1.TabIndex = 62;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // graphsToolStripMenuItem
             // 
@@ -310,9 +312,19 @@
             // 
             // rayTraceToolStripMenuItem
             // 
+            this.rayTraceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.paraxialRaytraceToolStripMenuItem});
             this.rayTraceToolStripMenuItem.Name = "rayTraceToolStripMenuItem";
             this.rayTraceToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.rayTraceToolStripMenuItem.Text = "RayTrace";
+            this.rayTraceToolStripMenuItem.Click += new System.EventHandler(this.rayTraceToolStripMenuItem_Click);
+            // 
+            // paraxialRaytraceToolStripMenuItem
+            // 
+            this.paraxialRaytraceToolStripMenuItem.Name = "paraxialRaytraceToolStripMenuItem";
+            this.paraxialRaytraceToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.paraxialRaytraceToolStripMenuItem.Text = "Paraxial Raytrace";
+            this.paraxialRaytraceToolStripMenuItem.Click += new System.EventHandler(this.paraxialRaytraceToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -471,5 +483,6 @@
         private System.ComponentModel.BackgroundWorker DistancebackgroundWorker;
         private System.Windows.Forms.Label Messagelabel;
         private System.Windows.Forms.ListBox Distance1listBoxCheck;
+        private System.Windows.Forms.ToolStripMenuItem paraxialRaytraceToolStripMenuItem;
     }
 }

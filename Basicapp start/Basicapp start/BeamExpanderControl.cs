@@ -19,12 +19,16 @@ using ZOSAPI.Editors;
 using ZOSAPI.Editors.LDE;
 using ZOSAPI.SystemData;
 using ZOSAPI.Tools.Optimization;
+using MathNet.Numerics;
+using MathNet.Numerics.Data.Text;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Basicapp_start
 {
     public partial class BeamExpanderControl : UserControl
     {
-        public static double Distance1Add, CopyInputMin, TM, Input, InputMax, InputMin, InputbeamDia, EPDConstrainF1, EPDConstrainF3, Mind1, Mind2, MinF1, MinF2, MinF3, Maxd1, Maxd2, MaxF1, MaxF2, MaxF3, Maxa1, Maxa2, Maxb1, Maxb2, MaxMx, MaxMy, MaxMxratioMy, Mina1, Mina2, Minb1, Minb2, MinMx, MinMy, MinMxratioMy, md1,d2;
+        public static double Distance1Add, Distance2Add, CopyInputMin, TM, Input, InputMax, InputMin, InputbeamDia, EPDConstrainF1, EPDConstrainF3, Mind1, Mind2, MinF1, MinF2, MinF3, Maxd1, Maxd2, MaxF1, MaxF2, MaxF3, Maxa1, Maxa2, Maxb1, Maxb2, MaxMx, MaxMy, MaxMxratioMy, Mina1, Mina2, Minb1, Minb2, MinMx, MinMy, MinMxratioMy, md1;
+        public static double InputAngle;
         public static string VendorL1, VendorL2, VendorL3, LP1, LP2, LP3; // Vendors and Lenspart variable to be used in MinTrack, Maxtrack and in Standalone application as sorted out for Maxtrack or Min track length
         public static List<double> Temp1 = new List<double>(); // List for Distance 1 that will be used to add thickness in Zemax LDE
         public static List<double> Temp2 = new List<double>(); // List for Distance 2 that will be used to add thickness in Zemax LDE
@@ -40,18 +44,19 @@ namespace Basicapp_start
         public static IList<double> CopyF2List = new List<double>();
         public static IList<double> CopyF3List = new List<double>();
         public static IList<double> CopyInpList = new List<double>();
-        public static double[] Mx = new double[1000000];
-        public static double[] My = new double[1000000];
+        public static double[] Mx = new double[3511808];
+        public static double[] My = new double[3511808];
         public static List<double> MxList = new List<double>();
         public static List<double> MyList = new List<double>();
-        public static double[] a1 = new double[1000000];
-        public static double[] a2 = new double[1000000];
-        public static double[] b1 = new double[1000000];
-        public static double[] b2 = new double[1000000];
-        public static double[] MxratioMy = new double[1000000];
+        public static double[] a1 = new double[3511808];
+        public static double[] a2 = new double[3511808];
+        public static double[] b1 = new double[3511808];
+        public static double[] b2 = new double[3511808];
+        public static double[] MxratioMy = new double[3511808];
         public static IList<double> templist = new List<double>();
-        public static double[] Maxtrack = new double[1000000];
+        public static double[] Maxtrack = new double[3511808];
         public static List<double> d1 = new List<double>();
+        public static List<double> d2 = new List<double>();
         public static List<double> focallength1 = new List<double>(); // Initialize array for focal length 1------ used with excel
         public static List<double> focallength2 = new List<double>(); // Initialize array for focal length 2------ used with excel
         public static List<double> focallength3 = new List<double>(); // Initialize array for focal length 3------ used with excel
@@ -177,6 +182,8 @@ namespace Basicapp_start
 
             InputbeamDia = double.Parse(BeamDiaInput.Text);
 
+            InputAngle = 0;
+
             EPDConstrainF1 = (double)1.5 * InputbeamDia;
 
             EPDConstrainF3 = (double)(1 / InputMin) * 1.5 * InputbeamDia;
@@ -215,7 +222,11 @@ namespace Basicapp_start
                         {
                             Distance1Add = Math.Round((double)F1List[c] + F2List[c] + ((F1List[c] * F2List[c]) / (CopyInputMin * F3List[c])), 4);
 
+                            //Distance2Add = Math.Round((double)F2List[c] + F3List[c] + ((F2List[c] * F3List[c] * CopyInputMin) / (F1List[c])), 4);
+
+
                             d1.Add(Distance1Add);
+                            //d2.Add(Distance2Add);
 
 
                         }
@@ -223,6 +234,7 @@ namespace Basicapp_start
 
 
                         bool Distance1 = d1.All(elements => elements >= 10);
+                        bool Distance2 = d2.All(items => items >= 5);
 
                         if (Distance1 == true)
                         {
@@ -283,7 +295,7 @@ namespace Basicapp_start
 
                         d1.Clear();
 
-
+                        //d2.Clear();
                     }
 
                     else
@@ -2512,6 +2524,67 @@ namespace Basicapp_start
 
 
             }
+        }
+
+        RayTrace RayTrace;
+
+        private void rayTraceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Maxtrackischecked = MaxtrackRadioButton.Checked;
+
+            Mintrackischecked = MinimumTrackButton.Checked;
+
+
+            if (RayTrace == null)
+            {
+                RayTrace = new RayTrace();
+
+
+
+                RayTrace.Show();
+
+
+                RayTrace.FormClosed += new FormClosedEventHandler(Graphs_FormClosed);
+
+
+            }
+
+            else
+                RayTrace.Activate();
+
+        }
+
+        ParaxialRayTrace ParaxialRayTrace;
+
+        private void paraxialRaytraceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Maxtrackischecked = MaxtrackRadioButton.Checked;
+
+            Mintrackischecked = MinimumTrackButton.Checked;
+
+
+            if (ParaxialRayTrace == null)
+            {
+                ParaxialRayTrace = new ParaxialRayTrace();
+
+
+
+                ParaxialRayTrace.Show();
+
+
+                ParaxialRayTrace.FormClosed += new FormClosedEventHandler(Graphs_FormClosed);
+
+
+            }
+
+            else
+                ParaxialRayTrace.Activate();
+
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
 
 
