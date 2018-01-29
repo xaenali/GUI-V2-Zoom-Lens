@@ -23,22 +23,22 @@ namespace Basicapp_start
         public static List<double> PRTfocallength1 = new List<double>(); // Initialize array for focal length 1------ used with excel
         public static List<double> PRTfocallength2 = new List<double>(); // Initialize array for focal length 2------ used with excel
         public static List<double> PRTfocallength3 = new List<double>(); // Initialize array for focal length 3------ used with excel
-        //public static List<double> EPD1 = new List<double>(); // Initialize List for Entrance pupil Dia 1 ------ used with excel
-        //public static List<double> EPD2 = new List<double>(); // Initialize List for Entrance pupil Dia  2------ used with excel
-        //public static List<double> EPD3 = new List<double>(); // Initialize List for fEntrance pupil Dia  3------ used with excel
-        //public static List<string> VL1 = new List<string>(); // Initialize vender for focallength 1------ used with excel
-        //public static List<string> VL2 = new List<string>(); // Initialize vendor for focallength 2------ used with excel
-        //public static List<string> VL3 = new List<string>(); // Initialize vendor for focallength 3------ used with excel
-        //public static List<string> LensPartList1 = new List<string>(); // Initialize Lens part number for focallength 1------ used with excel
-        //public static List<string> LensPartList2 = new List<string>(); // Initialize Lens part number for focallength 2------ used with excel
-        //public static List<string> LensPartList3 = new List<string>(); // Initialize Lens part number for focallength 3------ used with excel
-
+        ////public static List<double> EPD1 = new List<double>(); // Initialize List for Entrance pupil Dia 1 ------ used with excel
+        ////public static List<double> EPD2 = new List<double>(); // Initialize List for Entrance pupil Dia  2------ used with excel
+        ////public static List<double> EPD3 = new List<double>(); // Initialize List for fEntrance pupil Dia  3------ used with excel
+        ////public static List<string> VL1 = new List<string>(); // Initialize vender for focallength 1------ used with excel
+        ////public static List<string> VL2 = new List<string>(); // Initialize vendor for focallength 2------ used with excel
+        ////public static List<string> VL3 = new List<string>(); // Initialize vendor for focallength 3------ used with excel
+        ////public static List<string> LensPartList1 = new List<string>(); // Initialize Lens part number for focallength 1------ used with excel
+        ////public static List<string> LensPartList2 = new List<string>(); // Initialize Lens part number for focallength 2------ used with excel
+        ////public static List<string> LensPartList3 = new List<string>(); // Initialize Lens part number for focallength 3------ used with excel
 
 
         public ParaxialRayTrace()
         {
             InitializeComponent();
             getPRTExcelFile();
+        
         }
 
 
@@ -229,6 +229,8 @@ namespace Basicapp_start
         }
 
 
+
+
         private void ParaxialRayTrace_Load(object sender, EventArgs e)
         {
             MarginalRayHeight = BeamExpanderControl.InputbeamDia / 2;
@@ -239,15 +241,15 @@ namespace Basicapp_start
 
             ParaxialInputAngletextBox.Text = InputRayAngle.ToString();
 
-            Matrix<double> InputMatrix = Matrix<double>.Build.DenseOfArray(new[,] { { 2.5 }, { 0 } });
+            Matrix<double> InputMatrix = Matrix<double>.Build.DenseOfArray(new[,] { { BeamExpanderControl.InputbeamDia }, { 0 } });
 
             Matrix<double> TransferMatrix = Matrix<double>.Build.DenseOfArray(new[,] { { 1.0, 10.0 }, { 0, 1.0 } });
 
-            Matrix<double> TransferMatrixd1 = Matrix<double>.Build.DenseOfArray(new[,] { { 1.0, 14.78 }, { 0, 1.0 } });
+            Matrix<double> TransferMatrixd1 = Matrix<double>.Build.DenseOfArray(new[,] { { 1.0, BeamExpanderControl.Mind1 }, { 0, 1.0 } });
 
-            Matrix<double> TransferMatrixd2 = Matrix<double>.Build.DenseOfArray(new[,] { { 1.0, 32.398 }, { 0, 1.0 } });
+            Matrix<double> TransferMatrixd2 = Matrix<double>.Build.DenseOfArray(new[,] { { 1.0, BeamExpanderControl.Mind2 }, { 0, 1.0 } });
 
-            Matrix<double> Surface1RefractionMatrix = Matrix<double>.Build.DenseOfArray(new[,] { { 1.0, .0 }, { - 1 / PRTfocallength1[0], 1 } });
+            Matrix<double> Surface1RefractionMatrix = Matrix<double>.Build.DenseOfArray(new[,] { { 1.0, .0 }, { -1 / PRTfocallength1[0], 1 } });
 
             Matrix<double> Surface2RefractionMatrix = Matrix<double>.Build.DenseOfArray(new[,] { { 1.0, .0 }, { -1 / PRTfocallength2[0], 1 } });
 
@@ -263,7 +265,7 @@ namespace Basicapp_start
 
             var v = TransferMatrix.Multiply(Surface3RefractionMatrix.Multiply(TransferMatrixd2.Multiply(Surface2RefractionMatrix.Multiply(TransferMatrixd1.Multiply(Surface1RefractionMatrix.Multiply(TransferMatrix)))))).Multiply(InputMatrix);
 
-            
+
             richTextBox1.AppendText(v.ToString());
 
             richTextBox1.AppendText(TransferMatrix.ToString());
@@ -274,6 +276,7 @@ namespace Basicapp_start
             richTextBox1.AppendText(Surface3RefractionMatrix.ToString());
             richTextBox1.AppendText(TransferMatrix.ToString());
             richTextBox1.AppendText(InputMatrix.ToString());
+
 
 
         }

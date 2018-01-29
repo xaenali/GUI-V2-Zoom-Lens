@@ -63,6 +63,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="2D-Cross-Section.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="2D-Cross-Section.Designer.cs">
+      <DependentUpon>2D-Cross-Section.cs</DependentUpon>
+    </Compile>
     <Compile Include="BeamExpanderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -107,6 +113,9 @@
     <Compile Include="RayTrace.Designer.cs">
       <DependentUpon>RayTrace.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="2D-Cross-Section.resx">
+      <DependentUpon>2D-Cross-Section.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BeamExpanderControl.resx">
       <DependentUpon>BeamExpanderControl.cs</DependentUpon>
     </EmbeddedResource>
